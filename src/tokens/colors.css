@@ -1,12 +1,46 @@
 :root {
-  --ds-color-primary: #007bff;
-  --ds-color-secondary: #6c757d;
-  --ds-color-success: #28a745;
-  --ds-color-danger: #dc3545;
-  --ds-color-warning: #ffc107;
-  --ds-color-info: #17a2b8;
-  --ds-color-light: #f8f9fa;
-  --ds-color-dark: #343a40;
-  --ds-color-white: #ffffff;
+  --ds-color-primary: #135bec;
+  --ds-color-secondary: #64748b; /* slate-500 */
+  --ds-color-success: #22c55e; /* green-500 */
+  --ds-color-danger: #ef4444; /* red-500 */
+  --ds-color-warning: #f59e0b; /* amber-500 */
+  --ds-color-info: #0ea5e9; /* sky-500 */
+  
+  /* Slate Palette */
+  --ds-color-slate-50: #f8fafc;
+  --ds-color-slate-100: #f1f5f9;
+  --ds-color-slate-200: #e2e8f0;
+  --ds-color-slate-400: #94a3b8;
+  --ds-color-slate-500: #64748b;
+  --ds-color-slate-600: #475569;
+  --ds-color-slate-800: #1e293b;
+  --ds-color-slate-900: #0f172a;
+  --ds-color-slate-950: #020617;
+
+  --ds-color-light: var(--ds-color-slate-100);
+  --ds-color-dark: var(--ds-color-slate-900);
   --ds-color-black: #000000;
+}
+
+/* Dark Theme Overrides */
+.dark, [data-theme='dark'] {
+  --ds-color-light: var(--ds-color-slate-900);
+  --ds-color-dark: var(--ds-color-slate-50);
+  --ds-color-white: var(--ds-color-slate-100);
+  --ds-color-black: #ffffff;
+
+  /* Surface and Background overrides for dark mode */
+  --ds-bg-surface: var(--ds-color-slate-900);
+  --ds-bg-app: var(--ds-color-slate-950);
+  --ds-border-base: var(--ds-color-slate-800);
+
+  /* Specific component color overrides */
+  --ds-color-slate-100: var(--ds-color-slate-800);
+  --ds-color-slate-200: var(--ds-color-slate-700);
+}
+
+:root {
+  --ds-bg-surface: var(--ds-color-white);
+  --ds-bg-app: var(--ds-color-slate-50);
+  --ds-border-base: var(--ds-color-slate-200);
 }

@@ -1,4 +1,5 @@
 import { LitElement } from 'lit';
+export type ButtonVariant = 'primary' | 'slate' | 'danger' | 'ghost' | 'icon';
 /**
  * DsButton component
  * Part of the Portfolio Design System
@@ -6,9 +7,12 @@ import { LitElement } from 'lit';
 export declare class DsButton extends LitElement {
     static styles: import("lit").CSSResult;
     label: string;
-    count: number;
+    variant: ButtonVariant;
+    disabled: boolean;
+    tiny: boolean;
+    iconPrefix: string;
+    iconSuffix: string;
     render(): import("lit-html").TemplateResult<1>;
-    private _onClick;
 }
 declare global {
     interface HTMLElementTagNameMap {

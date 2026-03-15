@@ -14,38 +14,45 @@ suite('ds-button', () => {
     test('renders with default values', async () => {
         const el = await fixture(html `<ds-button></ds-button>`);
         assert.shadowDom.equal(el, `
-      <button part="button">
-        Button component (Count: 0)
+      <button class="primary" part="button">
+        <slot></slot>
       </button>
-      <slot></slot>
     `);
     });
     test('renders with a set label', async () => {
         const el = await fixture(html `<ds-button label="Test"></ds-button>`);
         assert.shadowDom.equal(el, `
-      <button part="button">
-        Test (Count: 0)
+      <button class="primary" part="button">
+        <span part="label">Test</span>
+        <slot></slot>
       </button>
-      <slot></slot>
     `);
     });
-    test('handles a click', async () => {
-        const el = (await fixture(html `<ds-button></ds-button>`));
-        const button = el.shadowRoot.querySelector('button');
-        button.click();
-        await el.updateComplete;
+    test('renders with variant icon', async () => {
+        const el = await fixture(html `<ds-button variant="icon">rocket</ds-button>`);
         assert.shadowDom.equal(el, `
-      <button part="button">
-        Button component (Count: 1)
+      <button class="icon" part="button">
+        <slot></slot>
       </button>
-      <slot></slot>
+    `);
+    });
+    test('renders with prefix and suffix icons', async () => {
+        const el = await fixture(html `<ds-button label="Test" iconPrefix="add" iconSuffix="arrow_forward"></ds-button>`);
+        assert.shadowDom.equal(el, `
+      <button class="primary" part="button">
+        <i class="icon-element" part="icon-prefix">add</i>
+        <span part="label">Test</span>
+        <slot></slot>
+        <i class="icon-element" part="icon-suffix">arrow_forward</i>
+      </button>
     `);
     });
     test('styling applied', async () => {
         const el = (await fixture(html `<ds-button></ds-button>`));
         await el.updateComplete;
         const button = el.shadowRoot.querySelector('button');
-        assert.equal(getComputedStyle(button).paddingTop, '16px');
+        assert.equal(getComputedStyle(button).borderRadius, '8px');
+        assert.equal(getComputedStyle(button).paddingTop, '8px');
     });
 });
 //# sourceMappingURL=ds-button_test.js.map
