@@ -1,76 +1,38 @@
 ---
 layout: page.11ty.cjs
-title: <my-element> ⌲ Home
+title: Portfolio Design System ⌲ Home
 ---
 
-# &lt;my-element>
+# Portfolio Design System
 
-`<my-element>` is an awesome element. It's a great introduction to building web components with LitElement, with nice documentation site as well.
+Welcome to the **Portfolio Design System**. This is a collection of reusable web components built with Lit and TypeScript, designed to provide a consistent look and feel across your projects.
 
-## As easy as HTML
+## Components
 
-<section class="columns">
-  <div>
+We offer a variety of components to help you build your user interface:
 
-`<my-element>` is just an HTML element. You can it anywhere you can use HTML!
+- **Buttons**: Call to action elements.
+- **Layout**: Navbar, Hero sections.
+- **Display**: Cards, Badges, Tags, Avatars, Banners.
+- **Feedback**: Tooltips, Skeletons.
+- **Forms**: Inputs.
+
+## Getting Started
+
+To use these components in your project, simply import them from the package:
+
+```javascript
+import '@your-org/portfolio-design-system';
+```
+
+Then use the custom elements in your HTML:
 
 ```html
-<my-element></my-element>
+<ds-button label="Click Me"></ds-button>
 ```
 
-  </div>
-  <div>
+## Design Tokens
 
-<my-element></my-element>
+Our system is driven by **Design Tokens**, ensuring that colors, typography, and spacing remain consistent and easy to theme.
 
-  </div>
-</section>
-
-## Configure with attributes
-
-<section class="columns">
-  <div>
-
-`<my-element>` can be configured with attributed in plain HTML.
-
-```html
-<my-element name="HTML"></my-element>
-```
-
-  </div>
-  <div>
-
-<my-element name="HTML"></my-element>
-
-  </div>
-</section>
-
-## Declarative rendering
-
-<section class="columns">
-  <div>
-
-`<my-element>` can be used with declarative rendering libraries like Angular, React, Vue, and lit-html
-
-```js
-import {html, render} from 'lit-html';
-
-const name = 'lit-html';
-
-render(
-  html`
-    <h2>This is a &lt;my-element&gt;</h2>
-    <my-element .name=${name}></my-element>
-  `,
-  document.body
-);
-```
-
-  </div>
-  <div>
-
-<h2>This is a &lt;my-element&gt;</h2>
-<my-element name="lit-html"></my-element>
-
-  </div>
-</section>
+Check out the [Tokens documentation](./tokens) for more information.

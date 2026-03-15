@@ -3,10 +3,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>&lt;my-element> Demo</title>
+    <title>&lt;ds-button> Demo</title>
+    <link rel="stylesheet" href="../src/tokens/colors.css">
+    <link rel="stylesheet" href="../src/tokens/typography.css">
+    <link rel="stylesheet" href="../src/tokens/spacing.css">
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../node_modules/lit/polyfill-support.js"></script>
-    <script type="module" src="../my-element.js"></script>
+    <script type="module" src="../index.js"></script>
     <style>
       p {
         border: solid 1px blue;
@@ -15,8 +18,33 @@
     </style>
   </head>
   <body>
-    <my-element>
-      <p>This is child content</p>
-    </my-element>
+    <h1>Portfolio Design System Demo</h1>
+    
+    <section>
+      <h2>Buttons</h2>
+      <ds-button label="DsButton"></ds-button>
+    </section>
+
+    <section>
+      <h2>Layout & Navigation</h2>
+      <ds-navbar label="DsNavbar"></ds-navbar>
+      <ds-hero label="DsHero"></ds-hero>
+    </section>
+
+    <section>
+      <h2>Components</h2>
+      <ds-card label="DsCard"></ds-card>
+      <ds-badge label="DsBadge"></ds-badge>
+      <ds-tag label="DsTag"></ds-tag>
+      <ds-avatar label="DsAvatar"></ds-avatar>
+      <ds-banner label="DsBanner"></ds-banner>
+      <ds-tooltip label="DsTooltip"></ds-tooltip>
+      <ds-skeleton label="DsSkeleton"></ds-skeleton>
+    </section>
+
+    <section>
+      <h2>Forms</h2>
+      <ds-input label="DsInput"></ds-input>
+    </section>
   </body>
 </html>

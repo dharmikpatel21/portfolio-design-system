@@ -1,0 +1,12 @@
+:root {
+  --ds-color-primary: #007bff;
+  --ds-color-secondary: #6c757d;
+  --ds-color-success: #28a745;
+  --ds-color-danger: #dc3545;
+  --ds-color-warning: #ffc107;
+  --ds-color-info: #17a2b8;
+  --ds-color-light: #f8f9fa;
+  --ds-color-dark: #343a40;
+  --ds-color-white: #ffffff;
+  --ds-color-black: #000000;
+}
