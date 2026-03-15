@@ -1,10 +1,10 @@
 {
-  "name": "@lit/lit-starter-ts",
-  "private": true,
-  "version": "2.0.3",
+  "name": "portfolio-design-system",
+  "version": "1.0.0",
   "description": "A modern, multi-component design system built with Lit and TypeScript",
   "main": "index.js",
   "module": "index.js",
+  "types": "index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -39,7 +39,7 @@
     "lit"
   ],
   "author": "Portfolio Design System Team",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "dependencies": {
     "lit": "^3.3.2"
   },
@@ -66,5 +66,14 @@
     "rollup-plugin-summary": "^2.0.1",
     "typescript": "~5.9.0"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "files": [
+    "components/",
+    "tokens/",
+    "index.js",
+    "index.d.ts",
+    "index.js.map",
+    "index.d.ts.map",
+    "custom-elements.json"
+  ]
 }
