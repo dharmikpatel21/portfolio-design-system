@@ -109,7 +109,7 @@ export class DsBanner extends LitElement {
           ${this.title ? html`<h5>${this.title}</h5>` : ''}
           <p>${this.description}<slot></slot></p>
         </div>
-        ${this.dismissible ? html`<span class="icon close" @click="${this._handleDismiss}">close</span>` : ''}
+        ${this.dismissible ? html`<span class="icon close" @click="${this._handleDismiss}"><slot name="close-icon">close</slot></span>` : ''}
       </div>
     `;
   }

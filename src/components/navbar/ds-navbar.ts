@@ -39,12 +39,21 @@ export class DsNavbar extends LitElement {
       gap: 12px;
       text-decoration: none;
       color: var(--ds-text-main, #0f172a);
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .logo:hover {
+      opacity: 0.8;
     }
 
     .logo-icon {
       font-family: 'Material Symbols Outlined';
-      font-size: 30px;
+      font-size: 28px;
       color: var(--ds-color-primary, #135bec);
+    }
+
+    ds-avatar {
+      --ds-avatar-size: 32px;
     }
 
     .logo-text {
@@ -118,8 +127,11 @@ export class DsNavbar extends LitElement {
   @property()
   logoIcon = 'token';
 
+  @property({ type: Object })
+  logoImage: string | { src: string; alt?: string } = '';
+
   @property()
-  version = 'v1.0';
+  version = '';
 
   @property({type: Boolean, reflect: true})
   isMenuOpen = false;
@@ -137,34 +149,42 @@ export class DsNavbar extends LitElement {
       <nav part="nav">
         <div class="container">
           <a href="/" class="logo">
-            <span class="logo-icon">${this.logoIcon}</span>
-            <span class="logo-text">${this.logoText} <span class="logo-version">${this.version}</span></span>
+            ${this.logoImage 
+              ? html`
+                <ds-avatar 
+                  src="${typeof this.logoImage === 'string' ? this.logoImage : this.logoImage.src}" 
+                  alt="${typeof this.logoImage === 'object' ? (this.logoImage.alt || this.logoText) : this.logoText}"
+                  size="small"
+                ></ds-avatar>`
+              : html`<span class="logo-icon">${this.logoIcon}</span>`
+            }
+            <span class="logo-text">${this.logoText} ${this.version ? html`<span class="logo-version">${this.version}</span>` : ''}</span>
           </a>
           
           <div class="nav-links">
             <slot></slot>
           </div>
 
-          <button class="menu-button" @click="${this._toggleMenu}">
-            menu
+          <button 
+            class="menu-button" 
+            @click="${this._toggleMenu}"
+            aria-label="Toggle menu"
+          >
+            <slot name="menu-icon">menu</slot>
           </button>
         </div>
       </nav>
 
-      <ds-sheet 
-        title="Navigation" 
-        side="right" 
-        .open="${this.isMenuOpen}"
-        @close="${this._closeMenu}"
-      >
-        <div class="mobile-nav-content" @click="${(e: Event) => {
-          if ((e.target as HTMLElement).tagName === 'A') this._closeMenu();
-        }}">
-          <slot name="mobile"></slot>
-          <!-- Fallback if no mobile slot provided, we encourage using mobile slot for cleaner control -->
-          <slot></slot> 
-        </div>
-      </ds-sheet>
+      <ds-sheet ?open="${this.isMenuOpen}" @close="${this._closeMenu}" title="Menu">
+          <slot name="close-icon" slot="close-icon"></slot>
+          <div class="mobile-nav-content" @click="${(e: Event) => {
+            if ((e.target as HTMLElement).tagName === 'A') this._closeMenu();
+          }}">
+            <slot name="mobile"></slot>
+            <!-- Fallback if no mobile slot provided, we encourage using mobile slot for cleaner control -->
+            <slot></slot> 
+          </div>
+        </ds-sheet>
     `;
   }
 }

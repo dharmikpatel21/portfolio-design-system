@@ -168,9 +168,13 @@ export class DsModal extends LitElement {
         <div class="${classMap({'modal-container': true, [this.size]: true})}" part="container">
           <div class="modal-header">
             <h2>${this.title}</h2>
-            <button class="close-button" @click="${this._handleClose}">
-              <span class="material-symbols-outlined">close</span>
-            </button>
+            <button 
+            class="close-button" 
+            @click="${this._handleClose}"
+            aria-label="Close modal"
+          >
+            <slot name="close-icon">close</slot>
+          </button>
           </div>
           
           <div class="modal-body">

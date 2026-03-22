@@ -174,8 +174,14 @@ export class DsSheet extends LitElement {
       <div class="${classMap({'sheet-container': true, [this.side]: true, open: this.open})}" part="container">
         <div class="sheet-header">
           <h2>${this.title}</h2>
-          <button class="close-button" @click="${this._handleClose}">
-            <span class="material-symbols-outlined">close</span>
+          <button 
+            class="close-button" 
+            @click="${this._handleClose}"
+            aria-label="Close sheet"
+          >
+            <slot name="close-icon">
+              <span class="material-symbols-outlined">close</span>
+            </slot>
           </button>
         </div>
         
