@@ -1,7 +1,7 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
-export type ButtonVariant = 'primary' | 'slate' | 'danger' | 'ghost' | 'icon';
+export type ButtonVariant = 'primary' | 'secondary' | 'slate' | 'danger' | 'ghost' | 'icon';
 
 /**
  * DsButton component
@@ -12,7 +12,7 @@ export class DsButton extends LitElement {
   static override styles = css`
     :host {
       display: inline-block;
-      font-family: var(--ds-font-family-sans);
+      font-family: var(--ds-font-family-sans, 'Space Grotesk', sans-serif);
     }
 
     button {
@@ -52,44 +52,45 @@ export class DsButton extends LitElement {
 
     /* Primary Variant */
     button.primary {
-      background-color: var(--ds-color-primary, #135bec);
-      color: white;
+      background-color: var(--ds-button-primary-bg, #135bec);
+      color: var(--ds-button-primary-text, white);
     }
 
     button.primary:hover:not(:disabled) {
-      filter: brightness(1.1);
+      background-color: var(--ds-button-primary-hover, #1151d4);
     }
 
-    /* Slate Variant */
-    button.slate {
-      background-color: var(--ds-color-slate-100, #f1f5f9);
-      color: var(--ds-color-dark, #0f172a);
+    /* Secondary / Slate Variant */
+    button.secondary, button.slate {
+      background-color: var(--ds-button-secondary-bg, #f1f5f9);
+      color: var(--ds-button-secondary-text, #0f172a);
+      border-color: var(--ds-button-secondary-border, transparent);
     }
 
-    button.slate:hover:not(:disabled) {
-      filter: brightness(1.1);
+    button.secondary:hover:not(:disabled), button.slate:hover:not(:disabled) {
+      background-color: var(--ds-button-secondary-hover, #e2e8f0);
     }
 
     /* Danger Variant */
     button.danger {
-      background-color: var(--ds-color-danger, #ef4444);
-      color: white;
+      background-color: var(--ds-button-danger-bg, rgba(239, 68, 68, 0.1));
+      color: var(--ds-button-danger-text, #ef4444);
+      border-color: var(--ds-button-danger-border, transparent);
     }
 
     button.danger:hover:not(:disabled) {
-      filter: brightness(1.1);
+      background-color: var(--ds-button-danger-hover, rgba(239, 68, 68, 0.2));
     }
 
     /* Ghost Variant */
     button.ghost {
       background-color: transparent;
-      color: var(--ds-color-dark, #0f172a);
-      border-color: var(--ds-border-base, #e2e8f0);
+      color: var(--ds-button-ghost-text, #135bec);
+      border-color: transparent;
     }
 
     button.ghost:hover:not(:disabled) {
-      background-color: var(--ds-bg-app, #f1f5f9);
-      filter: brightness(1.1);
+      background-color: var(--ds-button-ghost-hover, rgba(19, 91, 236, 0.05));
     }
 
     /* Icon Variant (Square/Circle icon button) */
@@ -100,13 +101,12 @@ export class DsButton extends LitElement {
       min-width: 40px;
       min-height: 40px;
       background-color: transparent;
-      color: var(--ds-color-dark, #0f172a);
+      color: var(--ds-button-icon-text, #0f172a);
       border-color: var(--ds-border-base, #e2e8f0);
     }
 
     button.icon:hover:not(:disabled) {
-      background-color: var(--ds-bg-app, #f1f5f9);
-      filter: brightness(1.1);
+      background-color: var(--ds-button-icon-hover, #f1f5f9);
     }
 
     button.icon.tiny {

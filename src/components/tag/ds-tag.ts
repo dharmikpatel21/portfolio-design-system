@@ -1,6 +1,8 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
+export type TagVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
+
 /**
  * DsTag component
  * Part of the Portfolio Design System
@@ -9,22 +11,64 @@ import {customElement, property} from 'lit/decorators.js';
 export class DsTag extends LitElement {
   static override styles = css`
     :host {
-      display: block;
-      margin-bottom: var(--ds-spacing-4, 16px);
-      padding: var(--ds-spacing-4, 16px);
-      border: 1px solid var(--ds-color-secondary, #ccc);
-      border-radius: 4px;
-      font-family: var(--ds-font-family-sans);
-      color: var(--ds-color-dark, #333);
+      display: inline-block;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 6px; /* rounded-md-ish */
+      font-family: var(--ds-font-family-sans, 'Space Grotesk', sans-serif);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      transition: all 0.2s ease-in-out;
+      border: 1px solid transparent;
+    }
+
+    /* Primary Variant (Subtle with border) */
+    .tag.primary {
+      background-color: var(--ds-tag-primary-bg, rgba(19, 91, 236, 0.05));
+      color: var(--ds-tag-primary-text, #135bec);
+      border-color: var(--ds-tag-primary-border, rgba(19, 91, 236, 0.2));
+    }
+
+    /* Neutral Variant (The one used for tech stack) */
+    .tag.neutral {
+      background-color: var(--ds-tag-neutral-bg, #f1f5f9);
+      color: var(--ds-tag-neutral-text, #475569);
+      border-color: var(--ds-tag-neutral-border, transparent);
+    }
+
+    /* Variants below are inherited but can be customized if needed */
+    .tag.success {
+      background-color: var(--ds-badge-success-bg, rgba(34, 197, 94, 0.1));
+      color: var(--ds-badge-success-text, #16a34a);
+    }
+
+    .tag.warning {
+      background-color: var(--ds-badge-warning-bg, rgba(245, 158, 11, 0.1));
+      color: var(--ds-badge-warning-text, #d97706);
+    }
+
+    .tag.danger {
+      background-color: var(--ds-badge-danger-bg, rgba(239, 68, 68, 0.1));
+      color: var(--ds-badge-danger-text, #dc2626);
     }
   `;
 
   @property()
-  label = 'Tag component';
+  label = '';
+
+  @property({reflect: true})
+  variant: TagVariant = 'primary';
 
   override render() {
     return html`
-      <div>${this.label}</div>
+      <div class="tag ${this.variant}" part="tag">
+        ${this.label}<slot></slot>
+      </div>
     `;
   }
 }

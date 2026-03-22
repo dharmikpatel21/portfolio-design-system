@@ -2,14 +2,21 @@
   "name": "portfolio-design-system",
   "version": "1.0.0",
   "description": "A modern, multi-component design system built with Lit and TypeScript",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./colors.css": "./src/tokens/colors.css"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "clean": "rimraf index.{d.ts,d.ts.map,js,js.map} components/ tokens/ test/ ds-button.{d.ts,d.ts.map,js,js.map}",
+    "clean": "rimraf dist",
     "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
     "lint:eslint": "eslint 'src/**/*.ts'",
     "lint:lit-analyzer": "lit-analyzer",
@@ -68,12 +75,8 @@
   },
   "customElements": "custom-elements.json",
   "files": [
-    "components/",
-    "tokens/",
-    "index.js",
-    "index.d.ts",
-    "index.js.map",
-    "index.d.ts.map",
+    "dist/",
+    "src/tokens/",
     "custom-elements.json"
   ]
 }

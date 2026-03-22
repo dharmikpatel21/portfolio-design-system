@@ -10,21 +10,73 @@ export class DsSkeleton extends LitElement {
   static override styles = css`
     :host {
       display: block;
-      margin-bottom: var(--ds-spacing-4, 16px);
-      padding: var(--ds-spacing-4, 16px);
-      border: 1px solid var(--ds-color-secondary, #ccc);
-      border-radius: 4px;
-      font-family: var(--ds-font-family-sans);
-      color: var(--ds-color-dark, #333);
+      width: 100%;
+    }
+
+    .skeleton {
+      background-color: var(--ds-bg-app, #f1f5f9);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skeleton::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        var(--ds-button-ghost-hover, rgba(255, 255, 255, 0.05)) 20%,
+        var(--ds-button-ghost-hover, rgba(255, 255, 255, 0.1)) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: shimmer 2s infinite;
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
     }
   `;
 
   @property()
-  label = 'Skeleton component';
+  width = '100%';
+
+  @property()
+  height = '16px';
+
+  @property()
+  borderRadius = '8px';
+
+  @property({type: Boolean})
+  pulse = true;
 
   override render() {
     return html`
-      <div>${this.label}</div>
+      <div 
+        class="skeleton ${this.pulse ? 'animate-pulse' : ''}" 
+        style="width: ${this.width}; height: ${this.height}; border-radius: ${this.borderRadius}"
+        part="skeleton"
+      ></div>
     `;
   }
 }

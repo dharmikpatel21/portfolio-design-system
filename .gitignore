@@ -10,3 +10,4 @@ index.d.ts
 index.d.ts.map
 # only generated for size check
 *.bundled.js
+/dist/

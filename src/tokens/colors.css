@@ -1,4 +1,5 @@
 :root {
+  /* Core Brand Colors */
   --ds-color-primary: #135bec;
   --ds-color-secondary: #64748b; /* slate-500 */
   --ds-color-success: #22c55e; /* green-500 */
@@ -17,30 +18,120 @@
   --ds-color-slate-900: #0f172a;
   --ds-color-slate-950: #020617;
 
-  --ds-color-light: var(--ds-color-slate-100);
-  --ds-color-dark: var(--ds-color-slate-900);
+  /* Theme Foundations (Light) */
+  --ds-bg-app: #f9f8f6;       /* Paper */
+  --ds-bg-app-glass: rgba(249, 248, 246, 0.8);
+  --ds-bg-surface: #ffffff;
+  --ds-border-base: rgba(19, 91, 236, 0.1);
+  --ds-text-main: #0f172a;    /* Deep */
+  --ds-text-muted: #64748b;   /* Slate 500 */
+
+  /* Component: Button (Light) */
+  --ds-button-primary-bg: var(--ds-color-primary);
+  --ds-button-primary-text: #ffffff;
+  --ds-button-primary-hover: #1151d4; /* Darker primary */
+
+  --ds-button-secondary-bg: var(--ds-color-slate-100);
+  --ds-button-secondary-text: var(--ds-color-slate-900);
+  --ds-button-secondary-hover: var(--ds-color-slate-200);
+  --ds-button-secondary-border: transparent;
+
+  --ds-button-ghost-text: var(--ds-color-primary);
+  --ds-button-ghost-hover: rgba(19, 91, 236, 0.05);
+
+  --ds-button-danger-bg: rgba(239, 68, 68, 0.1);
+  --ds-button-danger-text: var(--ds-color-danger);
+  --ds-button-danger-hover: rgba(239, 68, 68, 0.2);
+  --ds-button-danger-border: transparent;
+
+  --ds-button-icon-text: var(--ds-color-slate-900);
+  --ds-button-icon-hover: var(--ds-color-slate-100);
+
+  /* Component: Tag (Light) */
+  --ds-tag-neutral-bg: var(--ds-color-slate-100);
+  --ds-tag-neutral-text: var(--ds-color-slate-600);
+  --ds-tag-neutral-border: var(--ds-color-slate-200);
+
+  --ds-tag-primary-bg: rgba(19, 91, 236, 0.05);
+  --ds-tag-primary-text: var(--ds-color-primary);
+  --ds-tag-primary-border: rgba(19, 91, 236, 0.2);
+
+  /* Component: Badge (Light) - Pill style from design */
+  --ds-badge-primary-bg: rgba(19, 91, 236, 0.1);
+  --ds-badge-primary-text: var(--ds-color-primary);
+  
+  --ds-badge-success-bg: rgba(34, 197, 94, 0.1);
+  --ds-badge-success-text: #16a34a;
+
+  --ds-badge-warning-bg: rgba(245, 158, 11, 0.1);
+  --ds-badge-warning-text: #d97706;
+
+  --ds-badge-danger-bg: rgba(239, 68, 68, 0.1);
+  --ds-badge-danger-text: #dc2626;
+
+  /* Legacy Aliases */
+  --ds-color-light: var(--ds-bg-app);
+  --ds-color-dark: var(--ds-text-main);
+  --ds-color-white: #ffffff;
   --ds-color-black: #000000;
 }
 
 /* Dark Theme Overrides */
 .dark, [data-theme='dark'] {
-  --ds-color-light: var(--ds-color-slate-900);
-  --ds-color-dark: var(--ds-color-slate-50);
-  --ds-color-white: var(--ds-color-slate-100);
+  /* Theme Foundations (Dark) */
+  --ds-bg-app: #0e0e10;       /* Ink */
+  --ds-bg-app-glass: rgba(14, 14, 16, 0.8);
+  --ds-bg-surface: #111827;   /* Slate 900ish */
+  --ds-border-base: rgba(255, 255, 255, 0.1);
+  --ds-text-main: #f1f5f9;    /* Slate 100 */
+  --ds-text-muted: #94a3b8;   /* Slate 400 */
+
+  /* Component: Button (Dark) */
+  --ds-button-primary-bg: var(--ds-color-primary);
+  --ds-button-primary-text: #ffffff;
+  --ds-button-primary-hover: #1151d4;
+
+  --ds-button-secondary-bg: var(--ds-color-slate-800);
+  --ds-button-secondary-text: var(--ds-color-slate-100);
+  --ds-button-secondary-hover: var(--ds-color-slate-700);
+  --ds-button-secondary-border: rgba(255, 255, 255, 0.1);
+
+  --ds-button-ghost-text: var(--ds-color-slate-100);
+  --ds-button-ghost-hover: rgba(255, 255, 255, 0.05);
+
+  --ds-button-danger-bg: transparent;
+  --ds-button-danger-text: var(--ds-color-danger);
+  --ds-button-danger-border: rgba(239, 68, 68, 0.3);
+  --ds-button-danger-hover: rgba(239, 68, 68, 0.1);
+
+  --ds-button-icon-text: var(--ds-color-slate-100);
+  --ds-button-icon-hover: var(--ds-color-slate-800);
+
+  /* Component: Tag (Dark) */
+  --ds-tag-neutral-bg: var(--ds-color-slate-800);
+  --ds-tag-neutral-text: var(--ds-color-slate-300);
+  --ds-tag-neutral-border: var(--ds-color-slate-700);
+
+  --ds-tag-primary-bg: rgba(19, 91, 236, 0.1);
+  --ds-tag-primary-text: var(--ds-color-slate-100);
+  --ds-tag-primary-border: rgba(19, 91, 236, 0.4);
+
+  /* Component: Badge (Dark) */
+  --ds-badge-primary-bg: rgba(19, 91, 236, 0.2);
+  --ds-badge-primary-text: #ffffff;
+
+  --ds-badge-success-bg: rgba(34, 197, 94, 0.2);
+  --ds-badge-success-text: #4ade80;
+
+  --ds-badge-warning-bg: rgba(180, 83, 9, 0.3);
+  --ds-badge-warning-text: #fbbf24;
+
+  --ds-badge-danger-bg: rgba(153, 27, 27, 0.3);
+  --ds-badge-danger-text: #f87171;
+
+  /* Legacy Aliases (Dark) */
+  --ds-color-light: var(--ds-bg-app);
+  --ds-color-dark: var(--ds-text-main);
+  --ds-color-white: var(--ds-text-main);
   --ds-color-black: #ffffff;
-
-  /* Surface and Background overrides for dark mode */
-  --ds-bg-surface: var(--ds-color-slate-900);
-  --ds-bg-app: var(--ds-color-slate-950);
-  --ds-border-base: var(--ds-color-slate-800);
-
-  /* Specific component color overrides */
-  --ds-color-slate-100: var(--ds-color-slate-800);
-  --ds-color-slate-200: var(--ds-color-slate-700);
-}
-
-:root {
-  --ds-bg-surface: var(--ds-color-white);
-  --ds-bg-app: var(--ds-color-slate-50);
-  --ds-border-base: var(--ds-color-slate-200);
 }
