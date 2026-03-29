@@ -1,1 +1,0 @@
-{"version":3,"file":"ds-tooltip.d.ts","sourceRoot":"","sources":["../../src/components/tooltip/ds-tooltip.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAY,MAAM,KAAK,CAAC;AAG1C;;;GAGG;AACH,qBACa,SAAU,SAAQ,UAAU;IACvC,OAAgB,MAAM,0BAUpB;IAGF,KAAK,SAAuB;IAEnB,MAAM;CAKhB;AAED,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,qBAAqB;QAC7B,YAAY,EAAE,SAAS,CAAC;KACzB;CACF"}

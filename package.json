@@ -6,17 +6,22 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "./colors.css": "./dist/tokens/colors.css",
+      "./typography.css": "./dist/tokens/typography.css",
+      "./spacing.css": "./dist/tokens/spacing.css",
+      "./tokens/*": "./dist/tokens/*",
+      "./components/*": "./dist/components/*"
     },
-    "./colors.css": "./src/tokens/colors.css"
-  },
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "clean": "rimraf dist",
+      "build": "npm run clean && tsc && npm run build:tokens",
+      "build:watch": "tsc --watch",
+      "build:tokens": "mkdir -p dist/tokens && cp src/tokens/*.css dist/tokens/",
+      "clean": "rimraf dist",
     "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
     "lint:eslint": "eslint 'src/**/*.ts'",
     "lint:lit-analyzer": "lit-analyzer",
@@ -32,21 +37,34 @@
     "analyze:watch": "cem analyze --litelement --globs \"src/**/*.ts\" --watch",
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
-    "test": "npm run test:dev && npm run test:prod",
-    "test:dev": "wtr",
+    "test": "wtr",
     "test:watch": "wtr --watch",
     "test:prod": "MODE=prod wtr",
-    "test:prod:watch": "MODE=prod wtr --watch",
+    "prepublishOnly": "npm run build && npm test",
+    "prepare": "npm run build",
     "checksize": "rollup -c ; cat portfolio-design-system.bundled.js | gzip -9 | wc -c ; rm portfolio-design-system.bundled.js"
   },
   "keywords": [
+    "design-system",
     "web-components",
+    "lit",
     "lit-element",
     "typescript",
-    "lit"
+    "ui-kit",
+    "ui-components",
+    "portfolio",
+    "frontend",
+    "components",
+    "accessibility",
+    "a11y",
+    "design-tokens",
+    "glassmorphism"
   ],
   "author": "Portfolio Design System Team",
   "license": "MIT",
+  "peerDependencies": {
+    "lit": "^3.0.0"
+  },
   "dependencies": {
     "lit": "^3.3.2"
   },
