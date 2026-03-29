@@ -24,6 +24,7 @@ export class DsCard extends LitElement {
       display: flex;
       flex-direction: column;
       height: 100%;
+      min-height: max-content;
     }
 
     .card:hover {
@@ -32,19 +33,24 @@ export class DsCard extends LitElement {
       border-color: var(--ds-color-primary, rgba(19, 91, 236, 0.2));
     }
 
+    .media-container {
+      width: 100%;
+      margin-bottom: var(--ds-spacing-4, 16px);
+      display: block;
+    }
+
     .image-container {
       width: 100%;
       height: 160px;
       background-color: var(--ds-bg-app, #f1f5f9);
       border-radius: 8px;
-      margin-bottom: var(--ds-spacing-4, 16px);
       overflow: hidden;
     }
 
     .image-container img {
       width: 100%;
       height: 100%;
-      object-cover: cover;
+      object-fit: cover;
       filter: grayscale(100%);
       transition: filter 0.3s ease-in-out;
     }
@@ -109,11 +115,15 @@ export class DsCard extends LitElement {
   override render() {
     return html`
       <div class="card" part="card">
-        ${this.image ? html`
-          <div class="image-container">
-            <img src="${this.image}" alt="${this.title}" />
-          </div>
-        ` : ''}
+        <div class="media-container">
+          <slot name="media">
+            ${this.image ? html`
+              <div class="image-container">
+                <img src="${this.image}" alt="${this.title}" />
+              </div>
+            ` : ''}
+          </slot>
+        </div>
         
         ${this.title ? html`<h4>${this.title}</h4>` : ''}
         ${this.description ? html`<p>${this.description}</p>` : ''}
