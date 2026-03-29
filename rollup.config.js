@@ -10,7 +10,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 
 export default {
-  input: 'index.js',
+  input: 'dist/index.js',
   output: {
     file: 'portfolio-design-system.bundled.js',
     format: 'esm',

@@ -1,164 +1,320 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>&lt;ds-button> Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Design System - Component Playground</title>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- Local Design Tokens -->
     <link rel="stylesheet" href="../src/tokens/colors.css" />
     <link rel="stylesheet" href="../src/tokens/typography.css" />
     <link rel="stylesheet" href="../src/tokens/spacing.css" />
+    
     <style>
-      body {
-        font-family: var(--ds-font-family-sans);
-        background-color: var(--ds-bg-app);
-        color: var(--ds-color-dark);
-        margin: 0;
-        padding: 40px;
-        transition: background-color 0.3s, color 0.3s;
+      :root {
+        --playground-bg: #f8fafc;
+        --playground-border: #e2e8f0;
+        --playground-text: #0f172a;
       }
+
+      body {
+        font-family: var(--ds-font-family-sans, 'Space Grotesk', sans-serif);
+        background-color: var(--playground-bg);
+        color: var(--playground-text);
+        margin: 0;
+        padding: 0;
+        transition: all 0.3s ease;
+      }
+
+      body.dark {
+        --playground-bg: #020617;
+        --playground-border: #1e293b;
+        --playground-text: #f8fafc;
+        --ds-bg-app: #020617;
+        --ds-bg-surface: #0f172a;
+        --ds-text-main: #f8fafc;
+        --ds-text-muted: #94a3b8;
+        --ds-border-base: rgba(255, 255, 255, 0.1);
+      }
+
+      .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
       header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 40px;
+        margin-bottom: 60px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--playground-border);
       }
-      .theme-toggle {
-        cursor: pointer;
+
+      .theme-btn {
+        background: var(--ds-bg-surface, #fff);
+        border: 1px solid var(--playground-border);
+        color: var(--playground-text);
         padding: 8px 16px;
         border-radius: 8px;
-        border: 1px solid var(--ds-border-base);
-        background: var(--ds-bg-surface);
-        color: var(--ds-color-dark);
-        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-family: inherit;
+      }
+
+      section {
+        margin-bottom: 80px;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h2::before {
+        content: "";
+        width: 4px;
+        height: 24px;
+        background: var(--ds-color-primary, #135bec);
+        border-radius: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+      }
+
+      .component-box {
+        background: var(--ds-bg-surface, #fff);
+        border: 1px solid var(--playground-border);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .component-box h3 {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        color: var(--ds-text-muted, #64748b);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .flex-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      /* Fix for material icons appearance */
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
       }
     </style>
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../node_modules/lit/polyfill-support.js"></script>
-    <script type="module" src="../index.js"></script>
-    <style>
-      p {
-        border: solid 1px blue;
-        padding: 8px;
-      }
-    </style>
+
+    <!-- Project Entry -->
+    <script type="module" src="../dist/index.js"></script>
   </head>
   <body>
-    <header>
-      <h1>Portfolio Design System Demo</h1>
-      <button id="theme-switcher" class="theme-toggle">🌙 Dark Mode</button>
-    </header>
+    <ds-navbar logoText="ArtisticDev" version="v1.0.0" logoIcon="auto_awesome">
+      <a href="#">About</a>
+      <a href="#">Components</a>
+      <a href="#">Showcase</a>
+      <ds-button slot="mobile" variant="primary" label="Get Started" style="width: 100%"></ds-button>
+    </ds-navbar>
+
+    <div class="page-container">
+      <header>
+        <div>
+          <h1 style="margin: 0">Component Playground</h1>
+          <p style="color: var(--ds-text-muted); margin: 8px 0 0 0">Interactive development environment for Portfolio Design System</p>
+        </div>
+        <button id="theme-switcher" class="theme-btn">
+          <span class="material-symbols-outlined">dark_mode</span>
+          Theme Switcher
+        </button>
+      </header>
+
+      <section>
+        <ds-hero 
+          title="Elevate Your Digital Presence" 
+          description="A premium collection of reusable web components built with Lit and TypeScript. Designed for high-performance and aesthetic excellence."
+          badgeText="Open Beta"
+        >
+          <div slot="actions">
+            <ds-button label="Explore Docs" variant="primary"></ds-button>
+            <ds-button label="GitHub" variant="slate" iconPrefix="link"></ds-button>
+          </div>
+        </ds-hero>
+      </section>
+
+      <section>
+        <h2>Buttons & Feedback</h2>
+        <div class="grid">
+          <div class="component-box">
+            <h3>Variants</h3>
+            <div class="flex-row">
+              <ds-button label="Primary"></ds-button>
+              <ds-button label="Slate" variant="slate"></ds-button>
+              <ds-button label="Danger" variant="danger"></ds-button>
+              <ds-button label="Ghost" variant="ghost"></ds-button>
+            </div>
+            <div class="flex-row">
+              <ds-button variant="icon"><span class="material-symbols-outlined">favorite</span></ds-button>
+              <ds-button variant="icon" variant="slate"><span class="material-symbols-outlined">share</span></ds-button>
+              <ds-button label="Disabled" disabled></ds-button>
+            </div>
+          </div>
+
+          <div class="component-box">
+            <h3>Badges & Tags</h3>
+            <div class="flex-row">
+              <ds-badge label="New"></ds-badge>
+              <ds-badge label="Secondary" variant="secondary"></ds-badge>
+              <ds-badge label="Outline" variant="outline"></ds-badge>
+            </div>
+            <div class="flex-row">
+              <ds-tag label="React"></ds-tag>
+              <ds-tag label="Svelte" variant="neutral"></ds-tag>
+              <ds-tag label="Experimental" variant="warning"></ds-tag>
+              <ds-tag label="Stable" variant="success"></ds-tag>
+            </div>
+          </div>
+
+          <div class="component-box">
+            <h3>Tooltips & Avatars</h3>
+            <div class="flex-row">
+              <ds-tooltip title="Quick Info" content="This is a top tooltip content.">
+                <ds-button label="Hover Me (Top)" variant="ghost"></ds-button>
+              </ds-tooltip>
+              <ds-tooltip content="Bottom tooltip placement" position="bottom">
+                <span style="text-decoration: underline dashed">Underlined Text</span>
+              </ds-tooltip>
+            </div>
+            <div class="flex-row">
+              <ds-avatar initials="DP" size="large" status="online"></ds-avatar>
+              <ds-avatar initials="JD" size="medium" status="away"></ds-avatar>
+              <ds-avatar initials="AD" size="small" status="offline"></ds-avatar>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Cards & Content</h2>
+        <div class="grid">
+          <ds-card 
+            title="Next.js Dashboard" 
+            description="A complex administrative panel built with Next.js 14 and advanced charting."
+            footerText="View Project"
+            footerIcon="arrow_forward"
+            image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+          ></ds-card>
+
+          <ds-card 
+            title="E-commerce Web App" 
+            description="Modern shopping experience with Stripe integration."
+            footerText="Details"
+            footerIcon="open_in_new"
+            image="https://images.unsplash.com/photo-1557821552-17105176677c?q=80&w=2064&auto=format&fit=crop"
+          ></ds-card>
+
+          <div class="component-box" style="grid-column: span 1.5">
+            <h3>Banners & Skeletons</h3>
+            <ds-banner 
+              title="Welcome Back!" 
+              description="Your account overview has been updated with new metrics."
+              dismissible
+            ></ds-banner>
+            <ds-banner 
+              variant="warning"
+              description="Your plan expires in 3 days. Please renew."
+              icon="priority_high"
+            ></ds-banner>
+            <div style="display: flex; gap: 12px; flex-direction: column; width: 100%">
+              <ds-skeleton height="20px" width="80%"></ds-skeleton>
+              <ds-skeleton height="12px" width="100%"></ds-skeleton>
+              <ds-skeleton height="12px" width="40%"></ds-skeleton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Forms & Overlays</h2>
+        <div class="grid">
+          <div class="component-box">
+            <h3>Inputs</h3>
+            <ds-input label="Full Name" placeholder="Dharmik Patel" icon="person"></ds-input>
+            <ds-input label="Email" type="email" value="hello@example.com" icon="mail"></ds-input>
+            <ds-input label="Password" type="password" error="Minimum 8 characters" icon="lock"></ds-input>
+          </div>
+
+          <div class="component-box">
+            <h3>Overlays</h3>
+            <div class="flex-row">
+              <ds-button label="Open Modal" variant="slate" id="open-modal"></ds-button>
+              <ds-button label="Open Sheet" variant="ghost" id="open-sheet"></ds-button>
+            </div>
+            <p style="font-size: 13px; color: var(--ds-text-muted)">Click buttons to trigger overlay components.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Modals & Sheets -->
+    <ds-modal id="demo-modal" title="System Update">
+      <p>A new version of the design system is available. Would you like to update your local configuration?</p>
+      <div slot="footer">
+        <ds-button label="Cancel" variant="ghost" onclick="document.getElementById('demo-modal').open = false"></ds-button>
+        <ds-button label="Update Now" variant="primary" onclick="alert('Updating...'); document.getElementById('demo-modal').open = false"></ds-button>
+      </div>
+    </ds-modal>
+
+    <ds-sheet id="demo-sheet" title="Global Settings" side="right">
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <ds-input label="Username" value="dharmik21"></ds-input>
+        <ds-input label="Notifications" type="checkbox" label="Enable Push Notifications"></ds-input>
+        <ds-button label="Save Changes" variant="primary" style="width: 100%"></ds-button>
+      </div>
+    </ds-sheet>
 
     <script>
-      const btn = document.getElementById('theme-switcher');
-      btn.addEventListener('click', () => {
+      // Theme Switcher
+      const themeBtn = document.getElementById('theme-switcher');
+      themeBtn.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark');
-        btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        themeBtn.innerHTML = isDark 
+          ? '<span class="material-symbols-outlined">light_mode</span> Light Mode'
+          : '<span class="material-symbols-outlined">dark_mode</span> Dark Mode';
       });
+
+      // Overlay Controllers
+      const modal = document.getElementById('demo-modal');
+      const sheet = document.getElementById('demo-sheet');
+
+      document.getElementById('open-modal').onclick = () => modal.open = true;
+      document.getElementById('open-sheet').onclick = () => sheet.open = true;
+
+      modal.addEventListener('close', () => console.log('Modal closed'));
+      sheet.addEventListener('close', () => console.log('Sheet closed'));
     </script>
-
-    <section>
-      <h2>Buttons</h2>
-      <div 
-        id="button-container" 
-        style="display: flex; flex-direction: column; gap: 20px; padding: 20px; background: var(--ds-bg-surface); border-radius: 12px; border: 1px solid var(--ds-border-base);"
-      >
-        <div style="display: flex; gap: 10px">
-          <ds-button label="Primary" variant="primary"></ds-button>
-          <ds-button label="Slate" variant="slate"></ds-button>
-          <ds-button label="Danger" variant="danger"></ds-button>
-          <ds-button label="Ghost" variant="ghost"></ds-button>
-        </div>
-        <div style="display: flex; gap: 10px">
-          <ds-button label="Primary" variant="primary" disabled></ds-button>
-          <ds-button label="Slate" variant="slate" disabled></ds-button>
-          <ds-button label="Danger" variant="danger" disabled></ds-button>
-          <ds-button label="Ghost" variant="ghost" disabled></ds-button>
-        </div>
-        <div style="display: flex; gap: 10px">
-          <ds-button
-            label="Add Item"
-            variant="primary"
-            iconPrefix="add"
-          ></ds-button>
-          <ds-button
-            label="Settings"
-            variant="slate"
-            iconSuffix="settings"
-          ></ds-button>
-          <ds-button
-            label="Warning"
-            variant="danger"
-            iconPrefix="warning"
-            iconSuffix="arrow_forward"
-          ></ds-button>
-          <ds-button
-            label="Search"
-            variant="ghost"
-            iconPrefix="search"
-          ></ds-button>
-        </div>
-        <div style="display: flex; gap: 10px">
-          <ds-button variant="primary" label="Primary with Icon">
-            <span class="material-symbols-outlined">rocket</span>
-          </ds-button>
-          <ds-button variant="primary" label="Primary with Emoji">🔥</ds-button>
-        </div>
-        <div style="display: flex; gap: 10px; align-items: center">
-          <ds-button variant="icon"
-            ><span class="material-symbols-outlined">😂</span></ds-button
-          >
-          <ds-button variant="icon" variant="slate"
-            ><span class="material-symbols-outlined">share</span></ds-button
-          >
-          <ds-button variant="icon" tiny
-            ><span class="material-symbols-outlined">close</span></ds-button
-          >
-          <ds-button variant="icon" disabled
-            ><span class="material-symbols-outlined">lock</span></ds-button
-          >
-        </div>
-        <div style="display: flex; gap: 10px">
-          <ds-button
-            label="Custom Styled"
-            variant="primary"
-            style="--ds-color-primary: #8b5cf6; border-radius: 999px"
-          ></ds-button>
-          <ds-button
-            label="Part Styled"
-            id="part-button"
-            variant="ghost"
-          ></ds-button>
-          <style>
-            #part-button::part(button) {
-              border: 2px dashed #135bec;
-              color: #135bec;
-              font-weight: 900;
-            }
-          </style>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Layout & Navigation</h2>
-      <ds-navbar label="DsNavbar"></ds-navbar>
-      <ds-hero label="DsHero"></ds-hero>
-    </section>
-
-    <section>
-      <h2>Components</h2>
-      <ds-card label="DsCard"></ds-card>
-      <ds-badge label="DsBadge"></ds-badge>
-      <ds-tag label="DsTag"></ds-tag>
-      <ds-avatar label="DsAvatar"></ds-avatar>
-      <ds-banner label="DsBanner"></ds-banner>
-      <ds-tooltip label="DsTooltip"></ds-tooltip>
-      <ds-skeleton label="DsSkeleton"></ds-skeleton>
-    </section>
-
-    <section>
-      <h2>Forms</h2>
-      <ds-input label="DsInput"></ds-input>
-    </section>
   </body>
 </html>

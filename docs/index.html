@@ -29,24 +29,63 @@
     <div id="main-wrapper">
       <main>
         <h1>Portfolio Design System</h1>
-<p>Welcome to the <strong>Portfolio Design System</strong>. This is a collection of reusable web components built with Lit and TypeScript, designed to provide a consistent look and feel across your projects.</p>
-<h2>Components</h2>
-<p>We offer a variety of components to help you build your user interface:</p>
+<p>Welcome to the <strong>Portfolio Design System</strong>. This is a collection of high-performance, reusable web components built with <a href="https://lit.dev">Lit</a> and <a href="https://www.typescriptlang.org/">TypeScript</a>. These components are designed to provide a consistent, premium, and interactive experience across your portfolio and web applications.</p>
+<h2>✨ Key Features</h2>
 <ul>
-<li><strong>Buttons</strong>: Call to action elements.</li>
-<li><strong>Layout</strong>: Navbar, Hero sections.</li>
-<li><strong>Display</strong>: Cards, Badges, Tags, Avatars, Banners.</li>
-<li><strong>Feedback</strong>: Tooltips, Skeletons.</li>
-<li><strong>Forms</strong>: Inputs.</li>
+<li><strong>Modern &amp; Premium</strong>: Designed with a focus on aesthetics, including glassmorphism and smooth animations.</li>
+<li><strong>Accessible</strong>: Built with accessibility in mind, following WAI-ARIA best practices.</li>
+<li><strong>Themeable</strong>: Completely customizable via CSS Custom Properties (Design Tokens).</li>
+<li><strong>Lightweight</strong>: Built with Lit for minimal bundle size and maximum performance.</li>
+<li><strong>Universal</strong>: Works with any framework (React, Next.js, Vue, Svelte) or no framework at all.</li>
 </ul>
-<h2>Getting Started</h2>
-<p>To use these components in your project, simply import them from the package:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token string">'@your-org/portfolio-design-system'</span><span class="token punctuation">;</span></code></pre>
+<h2>🚀 Components</h2>
+<p>We offer a wide range of components for various use cases:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Category</th>
+<th style="text-align:left">Components</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Actions</strong></td>
+<td style="text-align:left"><a href="./api/#ds-button">Button</a>, <a href="./api/#ds-navbar">Navbar</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Display</strong></td>
+<td style="text-align:left"><a href="./api/#ds-avatar">Avatar</a>, <a href="./api/#ds-badge">Badge</a>, <a href="./api/#ds-banner">Banner</a>, <a href="./api/#ds-card">Card</a>, <a href="./api/#ds-tag">Tag</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Feedback</strong></td>
+<td style="text-align:left"><a href="./api/#ds-skeleton">Skeleton</a>, <a href="./api/#ds-tooltip">Tooltip</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Overlay</strong></td>
+<td style="text-align:left"><a href="./api/#ds-modal">Modal</a>, <a href="./api/#ds-sheet">Sheet</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Forms</strong></td>
+<td style="text-align:left"><a href="./api/#ds-input">Input</a></td>
+</tr>
+</tbody>
+</table>
+<h2>📦 Installation</h2>
+<p>Install the package via NPM:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> portfolio-design-system</code></pre>
+<h2>🛠 Usage</h2>
+<h3>In HTML/Vanilla JS</h3>
+<p>Simply import the component side-effect in your main JS file:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token string">'portfolio-design-system'</span><span class="token punctuation">;</span></code></pre>
 <p>Then use the custom elements in your HTML:</p>
-<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ds-button</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click Me<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ds-button</span><span class="token punctuation">></span></span></code></pre>
-<h2>Design Tokens</h2>
-<p>Our system is driven by <strong>Design Tokens</strong>, ensuring that colors, typography, and spacing remain consistent and easy to theme.</p>
-<p>Check out the <a href="./tokens">Tokens documentation</a> for more information.</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ds-navbar</span> <span class="token attr-name">logoText</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>My Portfolio<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#projects<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Projects<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#about<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>About<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ds-navbar</span><span class="token punctuation">></span></span><br><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ds-hero</span> <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Web Developer &amp; Designer<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>description<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Building digital experiences that matter.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ds-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>View Work<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ds-button</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ds-hero</span><span class="token punctuation">></span></span></code></pre>
+<h3>In Frameworks (React/Vue/Next.js)</h3>
+<p>Most frameworks support Web Components out of the box. For React/Next.js, you might need to handle custom events via properties or refs.</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> <span class="token string">'portfolio-design-system'</span><span class="token punctuation">;</span><br><br><span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>  <span class="token keyword">return</span> <span class="token punctuation">(</span><br>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ds-card</span> <br>      <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Awesome Project<span class="token punctuation">"</span></span> <br>      <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A brief description of my latest work.<span class="token punctuation">"</span></span><br>      <span class="token attr-name">footerText</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>View Project<span class="token punctuation">"</span></span><br>    <span class="token punctuation">/></span></span><br>  <span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<h2>🎨 Design Tokens</h2>
+<p>The design system is powered by CSS variables. You can override these to match your brand style.</p>
+<pre class="language-css"><code class="language-css"><span class="token selector">:root</span> <span class="token punctuation">{</span><br>  <span class="token property">--ds-color-primary</span><span class="token punctuation">:</span> #ff4500<span class="token punctuation">;</span><br>  <span class="token property">--ds-font-family-sans</span><span class="token punctuation">:</span> <span class="token string">'Inter'</span><span class="token punctuation">,</span> sans-serif<span class="token punctuation">;</span><br>  <span class="token property">--ds-border-radius-base</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>Check out the <a href="./api">API Reference</a> for a full list of available properties, events, and CSS parts for each component.</p>
 
       </main>
     </div>
