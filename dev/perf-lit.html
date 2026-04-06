@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Performance Test - Autonomous Lit Elements</title>
+
+    <link rel="stylesheet" href="../src/tokens/colors.css" />
+    <link rel="stylesheet" href="../src/tokens/typography.css" />
+    <link rel="stylesheet" href="../src/tokens/spacing.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <style>
+      body {
+        font-family: var(--ds-font-family-sans, sans-serif);
+        padding: 40px;
+        background: #f8fafc;
+      }
+      #container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .metric {
+        font-size: 20px;
+        font-weight: 600;
+        color: #135bec;
+        background: #e0e7ff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        display: inline-block;
+      }
+    </style>
+
+    <!-- Import only the Lit component, without polyfills -->
+    <script
+      type="module"
+      src="../dist/components/ds-button/ds-button.js"
+    ></script>
+  </head>
+  <body>
+    <h1>Track A: Autonomous Lit Elements (&lt;ds-button&gt;)</h1>
+    <p>
+      This page strictly loads Lit and the standard autonomous custom elements
+      class.
+    </p>
+
+    <div class="mb-6 flex gap-4 items-end">
+      <div class="flex-1 max-w-sm">
+        <label
+          for="content-input"
+          class="block text-sm font-medium text-slate-700 mb-1"
+          >Button Content (Auto-updates after typing)</label
+        >
+        <input
+          type="text"
+          id="content-input"
+          value="Lit Button"
+          placeholder="Enter text..."
+          class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+        />
+      </div>
+    </div>
+
+    <div id="metrics" class="mb-6">
+      <div
+        id="time-metric"
+        class="inline-block bg-blue-100 text-blue-800 px-5 py-3 rounded-xl border border-blue-200"
+      >
+        Ready...
+      </div>
+    </div>
+
+    <div id="container"></div>
+
+    <script type="module">
+      import {html, render} from 'lit';
+
+      const container = document.getElementById('container');
+      const timeMetric = document.getElementById('time-metric');
+      const contentInput = document.getElementById('content-input');
+
+      const TOTAL_BUTTONS = 3000;
+      let debounceTimeout;
+
+      const runBenchmark = async () => {
+        const customText = contentInput.value || 'Lit';
+        container.innerHTML = '';
+        timeMetric.innerHTML = 'Benchmarking 30,000 elements...';
+
+        // Wait for next frame to ensure the UI updates the "Running" state
+        await new Promise((r) => setTimeout(r, 100));
+
+        // Ensure the component definition is registered before measurement
+        await customElements.whenDefined('ds-button');
+
+        let htmlString = '';
+        const t0_start = performance.now();
+
+        const variants = ['primary', 'secondary', 'slate', 'danger', 'ghost'];
+
+        for (let i = 0; i < TOTAL_BUTTONS; i++) {
+          const variant = variants[i % variants.length];
+          const iconPrefix = i % 3 === 0 ? 'save' : '';
+          const iconSuffix = i % 4 === 0 ? 'arrow_forward' : '';
+          const tiny = i % 2 === 0 ? 'tiny' : '';
+
+          htmlString += `<ds-button variant="${variant}" ${
+            iconPrefix ? `icon-prefix="${iconPrefix}"` : ''
+          } ${
+            iconSuffix ? `icon-suffix="${iconSuffix}"` : ''
+          } ${tiny}>${customText} ${i + 1}</ds-button>\n`;
+        }
+        container.innerHTML = htmlString;
+        const t1_dom = performance.now();
+
+        // 2. Hydration Phase (Lit Element Internal Rendering)
+        const elements = Array.from(container.children);
+        await Promise.all(elements.map((el) => el.updateComplete));
+        const t2_hydration = performance.now();
+
+        // 3. Paint Phase
+        setTimeout(() => {
+          const t3_paint = performance.now();
+
+          const renderingTime = (t1_dom - t0_start).toFixed(2);
+          const hydrationTime = (t2_hydration - t1_dom).toFixed(2);
+          const interactiveTime = (t3_paint - t2_hydration).toFixed(2);
+          const totalTime = (t3_paint - t0_start).toFixed(2);
+
+          timeMetric.innerHTML = `
+            <div style="font-size: 24px; margin-bottom: 12px; color: #1e293b;">Lit elements (n=${TOTAL_BUTTONS}) loaded in <strong>${totalTime}ms</strong></div>
+            <ul style="font-size: 14px; color: #475569; padding-left: 20px; text-align: left; margin: 0; line-height: 1.6;">
+              <li><strong>${renderingTime}ms</strong> — Initial DOM Construction (innerHTML)</li>
+              <li><strong>${hydrationTime}ms</strong> — Component Hydration (updateComplete)</li>
+              <li><strong>${interactiveTime}ms</strong> — Layout & Browser Paint</li>
+            </ul>
+          `;
+        }, 0);
+      };
+
+      contentInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        timeMetric.innerHTML = 'Waiting for you to stop typing...';
+        debounceTimeout = setTimeout(runBenchmark, 500);
+      });
+
+      // Run once on load
+      runBenchmark();
+    </script>
+  </body>
+</html>

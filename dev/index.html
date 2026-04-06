@@ -4,18 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio Design System - Component Playground</title>
-    
+
     <!-- Google Fonts & Material Symbols -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
     <!-- Local Design Tokens -->
     <link rel="stylesheet" href="../src/tokens/colors.css" />
     <link rel="stylesheet" href="../src/tokens/typography.css" />
     <link rel="stylesheet" href="../src/tokens/spacing.css" />
-    
+
     <style>
       :root {
         --playground-bg: #f8fafc;
@@ -85,11 +91,67 @@
       }
 
       h2::before {
-        content: "";
+        content: '';
         width: 4px;
         height: 24px;
         background: var(--ds-color-primary, #135bec);
         border-radius: 2px;
+      }
+
+      .matrix-container {
+        margin-top: 40px;
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        overflow-x: auto;
+      }
+
+      .matrix-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+      }
+
+      .matrix-table th {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 2px solid #f1f5f9;
+        color: #64748b;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .matrix-table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+      }
+
+      .variant-name {
+        font-weight: 600;
+        color: #0f172a;
+        text-transform: capitalize;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .group-label {
+        font-size: 10px;
+        color: #94a3b8;
+        text-transform: uppercase;
       }
 
       .grid {
@@ -137,14 +199,21 @@
       <a href="#">About</a>
       <a href="#">Components</a>
       <a href="#">Showcase</a>
-      <ds-button slot="mobile" variant="primary" label="Get Started" style="width: 100%"></ds-button>
+      <ds-button
+        slot="mobile"
+        variant="primary"
+        label="Get Started"
+        style="width: 100%"
+      ></ds-button>
     </ds-navbar>
 
     <div class="page-container">
       <header>
         <div>
           <h1 style="margin: 0">Component Playground</h1>
-          <p style="color: var(--ds-text-muted); margin: 8px 0 0 0">Interactive development environment for Portfolio Design System</p>
+          <p style="color: var(--ds-text-muted); margin: 8px 0 0 0">
+            Interactive development environment for Portfolio Design System
+          </p>
         </div>
         <button id="theme-switcher" class="theme-btn">
           <span class="material-symbols-outlined">dark_mode</span>
@@ -153,14 +222,18 @@
       </header>
 
       <section>
-        <ds-hero 
-          title="Elevate Your Digital Presence" 
+        <ds-hero
+          title="Elevate Your Digital Presence"
           description="A premium collection of reusable web components built with Lit and TypeScript. Designed for high-performance and aesthetic excellence."
           badgeText="Open Beta"
         >
           <div slot="actions">
             <ds-button label="Explore Docs" variant="primary"></ds-button>
-            <ds-button label="GitHub" variant="slate" iconPrefix="link"></ds-button>
+            <ds-button
+              label="GitHub"
+              variant="slate"
+              iconPrefix="link"
+            ></ds-button>
           </div>
         </ds-hero>
       </section>
@@ -177,8 +250,14 @@
               <ds-button label="Ghost" variant="ghost"></ds-button>
             </div>
             <div class="flex-row">
-              <ds-button variant="icon"><span class="material-symbols-outlined">favorite</span></ds-button>
-              <ds-button variant="icon" variant="slate"><span class="material-symbols-outlined">share</span></ds-button>
+              <ds-button variant="icon"
+                ><span class="material-symbols-outlined"
+                  >favorite</span
+                ></ds-button
+              >
+              <ds-button variant="icon" variant="slate"
+                ><span class="material-symbols-outlined">share</span></ds-button
+              >
               <ds-button label="Disabled" disabled></ds-button>
             </div>
           </div>
@@ -201,35 +280,274 @@
           <div class="component-box">
             <h3>Tooltips & Avatars</h3>
             <div class="flex-row">
-              <ds-tooltip title="Quick Info" content="This is a top tooltip content.">
+              <ds-tooltip
+                title="Quick Info"
+                content="This is a top tooltip content."
+              >
                 <ds-button label="Hover Me (Top)" variant="ghost"></ds-button>
               </ds-tooltip>
               <ds-tooltip content="Bottom tooltip placement" position="bottom">
-                <span style="text-decoration: underline dashed">Underlined Text</span>
+                <span style="text-decoration: underline dashed"
+                  >Underlined Text</span
+                >
               </ds-tooltip>
             </div>
             <div class="flex-row">
               <ds-avatar initials="DP" size="large" status="online"></ds-avatar>
               <ds-avatar initials="JD" size="medium" status="away"></ds-avatar>
-              <ds-avatar initials="AD" size="small" status="offline"></ds-avatar>
+              <ds-avatar
+                initials="AD"
+                size="small"
+                status="offline"
+              ></ds-avatar>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <h2 style="margin-bottom: 8px">Master Button Matrix</h2>
+        <p style="color: #64748b; margin-bottom: 24px">
+          Comparing Track A (Autonomous) vs Track B (Customized Built-in)
+        </p>
+
+        <div class="matrix-container">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>Track A — &lt;ds-button&gt;</th>
+                <th>Track B — &lt;button is="ds-button-native"&gt;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row: Primary -->
+              <tr>
+                <td class="variant-name">Primary</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="primary">Standard</ds-button>
+                    <ds-button variant="primary" icon-prefix="save"
+                      >Prefix</ds-button
+                    >
+                    <ds-button
+                      variant="primary"
+                      icon-prefix="save"
+                      icon-suffix="arrow_forward"
+                      >Both</ds-button
+                    >
+                    <ds-button variant="primary" tiny>Tiny</ds-button>
+                    <ds-button variant="primary" tiny icon-prefix="save"
+                      >Tiny Prefix</ds-button
+                    >
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button is="ds-button-native" variant="primary">
+                      Standard
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="primary"
+                      icon-prefix="save"
+                    >
+                      Prefix
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="primary"
+                      icon-prefix="save"
+                      icon-suffix="arrow_forward"
+                    >
+                      Both
+                    </button>
+                    <button is="ds-button-native" variant="primary" tiny>
+                      Tiny
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="primary"
+                      tiny
+                      icon-prefix="save"
+                    >
+                      Tiny Prefix
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row: Secondary -->
+              <tr>
+                <td class="variant-name">Secondary</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="secondary">Standard</ds-button>
+                    <ds-button variant="secondary" icon-prefix="edit"
+                      >Prefix</ds-button
+                    >
+                    <ds-button variant="secondary" tiny>Tiny</ds-button>
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button is="ds-button-native" variant="secondary">
+                      Standard
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="secondary"
+                      icon-prefix="edit"
+                    >
+                      Prefix
+                    </button>
+                    <button is="ds-button-native" variant="secondary" tiny>
+                      Tiny
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row: Slate -->
+              <tr>
+                <td class="variant-name">Slate</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="slate">Standard</ds-button>
+                    <ds-button variant="slate" icon-prefix="settings"
+                      >Prefix</ds-button
+                    >
+                    <ds-button variant="slate" tiny>Tiny</ds-button>
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button is="ds-button-native" variant="slate">
+                      Standard
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="slate"
+                      icon-prefix="settings"
+                    >
+                      Prefix
+                    </button>
+                    <button is="ds-button-native" variant="slate" tiny>
+                      Tiny
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row: Danger -->
+              <tr>
+                <td class="variant-name">Danger</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="danger">Delete</ds-button>
+                    <ds-button variant="danger" icon-prefix="delete"
+                      >Prefix</ds-button
+                    >
+                    <ds-button variant="danger" tiny>Tiny</ds-button>
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button is="ds-button-native" variant="danger">
+                      Delete
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="danger"
+                      icon-prefix="delete"
+                    >
+                      Prefix
+                    </button>
+                    <button is="ds-button-native" variant="danger" tiny>
+                      Tiny
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row: Ghost -->
+              <tr>
+                <td class="variant-name">Ghost</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="ghost">Cancel</ds-button>
+                    <ds-button variant="ghost" icon-prefix="close"
+                      >Prefix</ds-button
+                    >
+                    <ds-button variant="ghost" tiny>Tiny</ds-button>
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button is="ds-button-native" variant="ghost">
+                      Cancel
+                    </button>
+                    <button
+                      is="ds-button-native"
+                      variant="ghost"
+                      icon-prefix="close"
+                    >
+                      Prefix
+                    </button>
+                    <button is="ds-button-native" variant="ghost" tiny>
+                      Tiny
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row: Icon Only -->
+              <tr>
+                <td class="variant-name">Icon Only</td>
+                <td>
+                  <div class="button-row">
+                    <ds-button variant="icon" icon-prefix="add"></ds-button>
+                    <ds-button
+                      variant="icon"
+                      icon-prefix="search"
+                      tiny
+                    ></ds-button>
+                  </div>
+                </td>
+                <td>
+                  <div class="button-row">
+                    <button
+                      is="ds-button-native"
+                      variant="icon"
+                      icon-prefix="add"
+                    ></button>
+                    <button
+                      is="ds-button-native"
+                      variant="icon"
+                      icon-prefix="search"
+                      tiny
+                    ></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <section>
         <h2>Cards & Content</h2>
         <div class="grid">
-          <ds-card 
-            title="Next.js Dashboard" 
+          <ds-card
+            title="Next.js Dashboard"
             description="A complex administrative panel built with Next.js 14 and advanced charting."
             footerText="View Project"
             footerIcon="arrow_forward"
             image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
           ></ds-card>
 
-          <ds-card 
-            title="E-commerce Web App" 
+          <ds-card
+            title="E-commerce Web App"
             description="Modern shopping experience with Stripe integration."
             footerText="Details"
             footerIcon="open_in_new"
@@ -238,17 +556,24 @@
 
           <div class="component-box" style="grid-column: span 1.5">
             <h3>Banners & Skeletons</h3>
-            <ds-banner 
-              title="Welcome Back!" 
+            <ds-banner
+              title="Welcome Back!"
               description="Your account overview has been updated with new metrics."
               dismissible
             ></ds-banner>
-            <ds-banner 
+            <ds-banner
               variant="warning"
               description="Your plan expires in 3 days. Please renew."
               icon="priority_high"
             ></ds-banner>
-            <div style="display: flex; gap: 12px; flex-direction: column; width: 100%">
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                flex-direction: column;
+                width: 100%;
+              "
+            >
               <ds-skeleton height="20px" width="80%"></ds-skeleton>
               <ds-skeleton height="12px" width="100%"></ds-skeleton>
               <ds-skeleton height="12px" width="40%"></ds-skeleton>
@@ -262,18 +587,42 @@
         <div class="grid">
           <div class="component-box">
             <h3>Inputs</h3>
-            <ds-input label="Full Name" placeholder="Dharmik Patel" icon="person"></ds-input>
-            <ds-input label="Email" type="email" value="hello@example.com" icon="mail"></ds-input>
-            <ds-input label="Password" type="password" error="Minimum 8 characters" icon="lock"></ds-input>
+            <ds-input
+              label="Full Name"
+              placeholder="Dharmik Patel"
+              icon="person"
+            ></ds-input>
+            <ds-input
+              label="Email"
+              type="email"
+              value="hello@example.com"
+              icon="mail"
+            ></ds-input>
+            <ds-input
+              label="Password"
+              type="password"
+              error="Minimum 8 characters"
+              icon="lock"
+            ></ds-input>
           </div>
 
           <div class="component-box">
             <h3>Overlays</h3>
             <div class="flex-row">
-              <ds-button label="Open Modal" variant="slate" id="open-modal"></ds-button>
-              <ds-button label="Open Sheet" variant="ghost" id="open-sheet"></ds-button>
+              <ds-button
+                label="Open Modal"
+                variant="slate"
+                id="open-modal"
+              ></ds-button>
+              <ds-button
+                label="Open Sheet"
+                variant="ghost"
+                id="open-sheet"
+              ></ds-button>
             </div>
-            <p style="font-size: 13px; color: var(--ds-text-muted)">Click buttons to trigger overlay components.</p>
+            <p style="font-size: 13px; color: var(--ds-text-muted)">
+              Click buttons to trigger overlay components.
+            </p>
           </div>
         </div>
       </section>
@@ -281,18 +630,37 @@
 
     <!-- Modals & Sheets -->
     <ds-modal id="demo-modal" title="System Update">
-      <p>A new version of the design system is available. Would you like to update your local configuration?</p>
+      <p>
+        A new version of the design system is available. Would you like to
+        update your local configuration?
+      </p>
       <div slot="footer">
-        <ds-button label="Cancel" variant="ghost" onclick="document.getElementById('demo-modal').open = false"></ds-button>
-        <ds-button label="Update Now" variant="primary" onclick="alert('Updating...'); document.getElementById('demo-modal').open = false"></ds-button>
+        <ds-button
+          label="Cancel"
+          variant="ghost"
+          onclick="document.getElementById('demo-modal').open = false"
+        ></ds-button>
+        <ds-button
+          label="Update Now"
+          variant="primary"
+          onclick="alert('Updating...'); document.getElementById('demo-modal').open = false"
+        ></ds-button>
       </div>
     </ds-modal>
 
     <ds-sheet id="demo-sheet" title="Global Settings" side="right">
       <div style="display: flex; flex-direction: column; gap: 24px">
         <ds-input label="Username" value="dharmik21"></ds-input>
-        <ds-input label="Notifications" type="checkbox" label="Enable Push Notifications"></ds-input>
-        <ds-button label="Save Changes" variant="primary" style="width: 100%"></ds-button>
+        <ds-input
+          label="Notifications"
+          type="checkbox"
+          label="Enable Push Notifications"
+        ></ds-input>
+        <ds-button
+          label="Save Changes"
+          variant="primary"
+          style="width: 100%"
+        ></ds-button>
       </div>
     </ds-sheet>
 
@@ -301,7 +669,7 @@
       const themeBtn = document.getElementById('theme-switcher');
       themeBtn.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark');
-        themeBtn.innerHTML = isDark 
+        themeBtn.innerHTML = isDark
           ? '<span class="material-symbols-outlined">light_mode</span> Light Mode'
           : '<span class="material-symbols-outlined">dark_mode</span> Dark Mode';
       });
@@ -310,8 +678,8 @@
       const modal = document.getElementById('demo-modal');
       const sheet = document.getElementById('demo-sheet');
 
-      document.getElementById('open-modal').onclick = () => modal.open = true;
-      document.getElementById('open-sheet').onclick = () => sheet.open = true;
+      document.getElementById('open-modal').onclick = () => (modal.open = true);
+      document.getElementById('open-sheet').onclick = () => (sheet.open = true);
 
       modal.addEventListener('close', () => console.log('Modal closed'));
       sheet.addEventListener('close', () => console.log('Sheet closed'));
