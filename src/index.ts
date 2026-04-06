@@ -1,13 +1,7 @@
-export * from './components/avatar/ds-avatar';
-export * from './components/badge/ds-badge';
-export * from './components/banner/ds-banner';
-export * from './components/button/ds-button';
-export * from './components/card/ds-card';
-export * from './components/hero/ds-hero';
-export * from './components/input/ds-input';
-export * from './components/modal/ds-modal';
-export * from './components/navbar/ds-navbar';
-export * from './components/sheet/ds-sheet';
-export * from './components/skeleton/ds-skeleton';
-export * from './components/tag/ds-tag';
-export * from './components/tooltip/ds-tooltip';
+import {bootstrapPolyfills} from './polyfills/custom-elements.js';
+
+// We explicitly run the polyfills and THEN dynamically import the components.
+// This prevents ES Module hoisting from executing component definitions prematurely in Safari.
+bootstrapPolyfills().then(() => {
+  import('./components.js');
+});

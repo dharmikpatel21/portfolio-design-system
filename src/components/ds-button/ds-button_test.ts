@@ -20,7 +20,7 @@ suite('ds-button', () => {
     assert.shadowDom.equal(
       el,
       `
-      <button class="primary" part="button">
+      <button aria-label="" class="primary" part="button" tabindex="-1">
         <slot></slot>
       </button>
     `
@@ -32,7 +32,7 @@ suite('ds-button', () => {
     assert.shadowDom.equal(
       el,
       `
-      <button class="primary" part="button">
+      <button aria-label="Test" class="primary" part="button" tabindex="-1">
         <span part="label">Test</span>
         <slot></slot>
       </button>
@@ -45,7 +45,7 @@ suite('ds-button', () => {
     assert.shadowDom.equal(
       el,
       `
-      <button class="icon" part="button">
+      <button aria-label="" class="icon" part="button" tabindex="-1">
         <slot></slot>
       </button>
     `
@@ -57,11 +57,11 @@ suite('ds-button', () => {
     assert.shadowDom.equal(
       el,
       `
-      <button class="primary" part="button">
-        <i class="icon-element" part="icon-prefix">add</i>
+      <button aria-label="Test" class="primary" part="button" tabindex="-1">
+        <i class="icon-element" part="icon-prefix" aria-hidden="true">add</i>
         <span part="label">Test</span>
         <slot></slot>
-        <i class="icon-element" part="icon-suffix">arrow_forward</i>
+        <i class="icon-element" part="icon-suffix" aria-hidden="true">arrow_forward</i>
       </button>
     `
     );

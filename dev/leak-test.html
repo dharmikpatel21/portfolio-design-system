@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Leakage Test</title>
+
+    <link rel="stylesheet" href="../src/tokens/colors.css" />
+    <link rel="stylesheet" href="../src/tokens/typography.css" />
+    <link rel="stylesheet" href="../src/tokens/spacing.css" />
+
+    <!-- MALICIOUS GLOBAL CSS -->
+    <style>
+      body {
+        font-family: var(--ds-font-family-sans, sans-serif);
+        padding: 40px;
+        background: #f8fafc;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        margin-top: 20px;
+      }
+
+      .test-case {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+      }
+
+      /* 
+         This simulates a bad developer putting a violent overarching 
+         CSS rule inside their application's main stylesheet.
+      */
+      /* button {
+        background-color: red !important;
+        border-radius: 0 !important;
+        padding: 50px !important;
+        border: 10px solid black !important;
+        font-size: 24px !important;
+        color: yellow !important;
+      } */
+    </style>
+
+    <!-- Import Project -->
+    <script type="module">
+      import {bootstrapPolyfills} from '../dist/polyfills/custom-elements.js';
+
+      bootstrapPolyfills().then(() => {
+        import('../dist/index.js');
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Shadow DOM Encapsulation Test</h1>
+    <p>
+      We have injected an extremely aggressive global style:
+      <strong
+        ><code
+          >button { background: red !important; padding: 50px !important;
+          }</code
+        ></strong
+      >
+    </p>
+
+    <div class="container">
+      <!-- 1. STANDARD BUTTON -->
+      <div class="test-case">
+        <h3>1. Standard HTML Button</h3>
+        <p style="color: #64748b; font-size: 14px">
+          Gets obliterated by the global CSS rule.
+        </p>
+        <button>Standard Button</button>
+      </div>
+
+      <!-- 2. NATIVE LIT BUTTON (Track B) -->
+      <div class="test-case">
+        <h3>2. Customized Built-in Element (Track B)</h3>
+        <p style="color: #64748b; font-size: 14px">
+          <code>&lt;button is="ds-button-native"&gt;</code> has NO Shadow DOM.
+          It gets completely ruined by the global CSS, even though it has
+          design-system logic attached.
+        </p>
+        <button is="ds-button-native" variant="primary">Track B Native</button>
+      </div>
+
+      <!-- 3. AUTONOMOUS LIT ELEMENT (Track A) -->
+      <div class="test-case">
+        <h3>3. Autonomous Custom Element (Track A)</h3>
+        <p style="color: #64748b; font-size: 14px">
+          <code>&lt;ds-button&gt;</code> uses true Shadow DOM encapsulation. The
+          global CSS cannot pierce the Shadow Root, so it remains perfectly
+          pristine.
+        </p>
+        <ds-button variant="primary">Track A Autonomous</ds-button>
+      </div>
+    </div>
+  </body>
+</html>
