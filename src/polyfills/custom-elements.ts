@@ -1,25 +1,25 @@
-// Load before any component code in your entry point
-// Patches Safari's missing customized built-in element support
+// polyfills/custom-elements.ts
+
+// Export a synchronous flag so components can check for Safari instantly
+export const IS_SAFARI_OR_WEBKIT =
+  typeof navigator !== 'undefined' &&
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 async function bootstrapPolyfills() {
-  // Declarative Shadow DOM polyfill for older browsers
-  if (!HTMLTemplateElement.prototype.hasOwnProperty('shadowRootMode')) {
+  // 1. Declarative Shadow DOM polyfill
+  if (
+    typeof document !== 'undefined' &&
+    !HTMLTemplateElement.prototype.hasOwnProperty('shadowRootMode')
+  ) {
     const {hydrateShadowRoots} = await import(
       '@webcomponents/template-shadowroot/template-shadowroot.js'
     );
     hydrateShadowRoots(document.body);
   }
 
-  // Hybrid detection for customized built-in elements
-  // 1. Feature detection: Check if a created element is actually upgraded
-  // 2. UA Sniffing fallback: Force for Safari/Webkit to be safe
-  const isSafari =
-    /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
-    (navigator.userAgent.includes('AppleWebKit') &&
-      !navigator.userAgent.includes('Chrome'));
-
+  // 2. Feature detection for customized built-in elements
   const supportsCustomizedBuiltIn = (() => {
-    if (isSafari) return false; // Always polyfill Safari to be safe
+    if (IS_SAFARI_OR_WEBKIT) return false; // Always polyfill Safari to be safe
     try {
       const name = 'ds-feature-check';
       if (!customElements.get(name)) {
@@ -34,8 +34,8 @@ async function bootstrapPolyfills() {
     }
   })();
 
+  // 3. Load the @ungap polyfill if the browser (Safari) needs it
   if (!supportsCustomizedBuiltIn) {
-    // Patches Safari to support <button is="ds-button-native">
     await import('@ungap/custom-elements');
   }
 }
