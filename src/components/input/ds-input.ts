@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsInput component
@@ -122,3 +123,79 @@ declare global {
     'ds-input': DsInput;
   }
 }
+
+registerMCPTool({
+  name: 'ds_input',
+  title: 'DS Input',
+  description: 'Styled text input with label, placeholder, optional Material Symbol icon prefix, error message state, and bubbling "input" event. Tag: <ds-input>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-input',
+    properties: [
+      {name: 'label', type: 'string', description: 'Label text rendered above the input.'},
+      {name: 'placeholder', type: 'string', description: 'Placeholder text inside the input.'},
+      {name: 'value', type: 'string', description: 'Current input value (two-way bindable).'},
+      {name: 'type', type: 'string', default: 'text', description: 'HTML input type: text, email, password, number, etc.'},
+      {name: 'icon', type: 'string', description: 'Material Symbol icon name shown as a prefix inside the input.'},
+      {name: 'error', type: 'string', description: 'Error message shown below the input in red.'},
+    ],
+    events: [{name: 'input', detail: '{value: string}', description: 'Fired on every keystroke with the current value.'}],
+    examples: [
+      '<ds-input label="Email" type="email" placeholder="you@example.com" icon="mail"></ds-input>',
+      '<ds-input label="Password" type="password" error="Too short"></ds-input>',
+    ],
+  }),
+});
+
+registerMCPTool({
+  name: 'ds_input_set_value',
+  title: 'Set DS Input Value',
+  description: 'Set the value of a ds-input component on the page and fire its input event.',
+  inputSchema: {
+    type: 'object',
+    required: ['value'],
+    properties: {
+      value: {type: 'string', description: 'The new value to set.'},
+      label: {type: 'string', description: 'Filter by the ds-input label attribute.'},
+      selector: {type: 'string', description: 'CSS selector targeting a specific ds-input.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    const inputs = Array.from(document.querySelectorAll('ds-input'));
+    let target: Element | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el?.tagName.toLowerCase() === 'ds-input') target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target && typeof input['label'] === 'string' && input['label']) {
+      target = inputs.find(el => el.getAttribute('label') === input['label']) ?? null;
+    }
+    if (!target) target = inputs[0] ?? null;
+
+    if (!target) {
+      const available = inputs.map(el => el.getAttribute('label') || el.getAttribute('placeholder') || '(unnamed)');
+      return {success: false, error: 'No matching ds-input found.', availableInputs: available};
+    }
+    (target as HTMLElement & {value: string}).value = String(input['value']);
+    target.dispatchEvent(new CustomEvent('input', {detail: {value: input['value']}, bubbles: true, composed: true}));
+    return {success: true, value: input['value']};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_input_get_values',
+  title: 'Get DS Input Values',
+  description: 'Read the current label and value of all ds-input components on the page.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const inputs = Array.from(document.querySelectorAll('ds-input'));
+    return inputs.map(el => ({
+      label: el.getAttribute('label') ?? '',
+      value: (el as HTMLElement & {value: string}).value ?? '',
+      selector: el.id ? `#${el.id}` : undefined,
+    }));
+  },
+});

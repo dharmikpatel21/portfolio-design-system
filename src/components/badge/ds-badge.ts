@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsBadge component
@@ -75,3 +76,23 @@ declare global {
     'ds-badge': DsBadge;
   }
 }
+
+registerMCPTool({
+  name: 'ds_badge',
+  title: 'DS Badge',
+  description: 'Pill-shaped status label for counts, categories, or states. Variants: primary, secondary, success, warning, danger, outline. Tag: <ds-badge>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-badge',
+    properties: [
+      {name: 'label', type: 'string', description: 'Text inside the badge. Can also use default slot.'},
+      {name: 'variant', type: "'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline'", default: 'primary'},
+    ],
+    slots: [{name: '(default)', description: 'Alternative to the label property.'}],
+    cssParts: ['badge'],
+    examples: [
+      '<ds-badge label="New" variant="success"></ds-badge>',
+      '<ds-badge label="3" variant="danger"></ds-badge>',
+    ],
+  }),
+});

@@ -1,6 +1,7 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsModal component
@@ -195,3 +196,88 @@ declare global {
     'ds-modal': DsModal;
   }
 }
+
+registerMCPTool({
+  name: 'ds_modal',
+  title: 'DS Modal',
+  description: 'Dialog overlay with blurred backdrop, animated entry, header title, scrollable body slot, and footer slot. Closes on backdrop click or close button — fires "close" event. Responsive: slides up from bottom on mobile. Tag: <ds-modal>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-modal',
+    properties: [
+      {name: 'open', type: 'boolean', default: false, reflected: true, description: 'Controls visibility. Set to true to open, false to close.'},
+      {name: 'title', type: 'string', description: 'Modal header heading text.'},
+      {name: 'size', type: "'sm' | 'md' | 'lg'", default: 'md', description: '400px / 600px / 900px max-width.'},
+    ],
+    events: [{name: 'close', description: 'Fired when the modal is dismissed via close button or backdrop click.'}],
+    slots: [
+      {name: '(default)', description: 'Scrollable body content.'},
+      {name: 'footer', description: 'Action buttons in the modal footer.'},
+      {name: 'close-icon', description: 'Custom close icon (defaults to "close").'},
+    ],
+    cssParts: ['container'],
+    example: '<ds-modal open title="Confirm" size="sm"><p>Are you sure?</p><ds-button slot="footer" label="OK"></ds-button></ds-modal>',
+  }),
+});
+
+registerMCPTool({
+  name: 'ds_modal_open',
+  title: 'Open DS Modal',
+  description: 'Open a ds-modal on the page by setting its open property to true.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-modal. Defaults to the first ds-modal found.'},
+      title: {type: 'string', description: 'Filter by the modal title attribute.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    const modals = Array.from(document.querySelectorAll('ds-modal'));
+    let target: Element | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el?.tagName.toLowerCase() === 'ds-modal') target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target && typeof input['title'] === 'string' && input['title']) {
+      target = modals.find(m => m.getAttribute('title') === input['title']) ?? null;
+    }
+    if (!target) target = modals[0] ?? null;
+
+    if (!target) {
+      const available = modals.map(m => m.getAttribute('title') || '(no title)');
+      return {success: false, error: 'No matching ds-modal found.', availableModals: available};
+    }
+    (target as HTMLElement & {open: boolean}).open = true;
+    return {success: true, opened: target.getAttribute('title')};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_modal_close',
+  title: 'Close DS Modal',
+  description: 'Close an open ds-modal on the page by setting its open property to false.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-modal. Defaults to the first open ds-modal found.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el?.tagName.toLowerCase() === 'ds-modal') target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target) target = document.querySelector('ds-modal[open]');
+
+    if (!target) return {success: false, error: 'No open ds-modal found.'};
+    (target as HTMLElement & {open: boolean}).open = false;
+    return {success: true};
+  },
+});

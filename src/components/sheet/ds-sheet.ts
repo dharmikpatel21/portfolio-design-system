@@ -1,6 +1,7 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsSheet component
@@ -198,3 +199,87 @@ declare global {
     'ds-sheet': DsSheet;
   }
 }
+
+registerMCPTool({
+  name: 'ds_sheet',
+  title: 'DS Sheet',
+  description: 'Slide-out drawer panel that can enter from any side of the viewport (left/right/top/bottom). Has a header with title and close button. Fires "close" on dismiss. Tag: <ds-sheet>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-sheet',
+    properties: [
+      {name: 'open', type: 'boolean', default: false, reflected: true, description: 'Controls visibility.'},
+      {name: 'side', type: "'left' | 'right' | 'top' | 'bottom'", default: 'right', description: 'Which edge the sheet slides in from.'},
+      {name: 'title', type: 'string', description: 'Header title text.'},
+    ],
+    events: [{name: 'close', description: 'Fired when the sheet is dismissed via close button or backdrop click.'}],
+    slots: [
+      {name: '(default)', description: 'Sheet body content.'},
+      {name: 'close-icon', description: 'Custom close icon (defaults to Material Symbol "close").'},
+    ],
+    cssParts: ['container'],
+    example: '<ds-sheet open side="right" title="Settings"><p>Sheet content here.</p></ds-sheet>',
+  }),
+});
+
+registerMCPTool({
+  name: 'ds_sheet_open',
+  title: 'Open DS Sheet',
+  description: 'Open a ds-sheet on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-sheet. Defaults to the first ds-sheet found.'},
+      title: {type: 'string', description: 'Filter by the sheet title attribute.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    const sheets = Array.from(document.querySelectorAll('ds-sheet'));
+    let target: Element | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el?.tagName.toLowerCase() === 'ds-sheet') target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target && typeof input['title'] === 'string' && input['title']) {
+      target = sheets.find(s => s.getAttribute('title') === input['title']) ?? null;
+    }
+    if (!target) target = sheets[0] ?? null;
+
+    if (!target) {
+      const available = sheets.map(s => s.getAttribute('title') || '(no title)');
+      return {success: false, error: 'No matching ds-sheet found.', availableSheets: available};
+    }
+    (target as HTMLElement & {open: boolean}).open = true;
+    return {success: true, opened: target.getAttribute('title')};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_sheet_close',
+  title: 'Close DS Sheet',
+  description: 'Close an open ds-sheet on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-sheet. Defaults to the first open ds-sheet.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el?.tagName.toLowerCase() === 'ds-sheet') target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target) target = document.querySelector('ds-sheet[open]');
+
+    if (!target) return {success: false, error: 'No open ds-sheet found.'};
+    (target as HTMLElement & {open: boolean}).open = false;
+    return {success: true};
+  },
+});

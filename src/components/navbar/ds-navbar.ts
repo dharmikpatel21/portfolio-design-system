@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsNavbar component
@@ -194,3 +195,28 @@ declare global {
     'ds-navbar': DsNavbar;
   }
 }
+
+registerMCPTool({
+  name: 'ds_navbar',
+  title: 'DS Navbar',
+  description: 'Sticky top navigation bar with glassmorphism backdrop. Shows a logo (icon or image) with optional version tag, desktop nav-link slot, and a hamburger menu that opens a ds-sheet on mobile. Tag: <ds-navbar>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-navbar',
+    properties: [
+      {name: 'logoText', type: 'string', default: 'DevSystem', description: 'Text next to the logo icon.'},
+      {name: 'logoIcon', type: 'string', default: 'token', description: 'Material Symbol icon name for the logo. Ignored when logoImage is set.'},
+      {name: 'logoImage', type: 'string | {src: string, alt?: string}', description: 'URL or object for a logo image; renders a ds-avatar instead of the icon.'},
+      {name: 'version', type: 'string', description: 'Optional version label rendered in primary color next to the logo text.'},
+      {name: 'isMenuOpen', type: 'boolean', default: false, reflected: true, description: 'Controls the mobile sheet menu open state.'},
+    ],
+    slots: [
+      {name: '(default)', description: 'Desktop nav links (shown in the header). Also mirrored into the mobile sheet as a fallback.'},
+      {name: 'mobile', description: 'Dedicated mobile nav links inside the sheet — preferred over relying on the default slot fallback.'},
+      {name: 'menu-icon', description: 'Custom hamburger icon (defaults to "menu").'},
+      {name: 'close-icon', description: 'Custom close icon for the mobile sheet.'},
+    ],
+    cssParts: ['nav'],
+    example: '<ds-navbar logo-text="MyApp" logo-icon="rocket_launch" version="1.0"><a href="/">Home</a><a href="/about">About</a></ds-navbar>',
+  }),
+});

@@ -1,3 +1,5 @@
+import {registerMCPTool} from '../../webmcp/index.js';
+
 // Inject styles once (reuse button's existing injection logic)
 let nativeInputStylesInjected = false;
 function injectStyles() {
@@ -128,3 +130,83 @@ declare global {
     'ds-input-native': DsInputNative;
   }
 }
+
+registerMCPTool({
+  name: 'ds_input_native',
+  title: 'DS Input Native',
+  description: 'Customized built-in input element — extends the native <input> tag using the "is" attribute. Applies design-system styling via document-level CSS. Optionally injects a Material Symbol icon sibling before the input. Wrap in a <label> for accessibility. Usage: <input is="ds-input-native">.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'input',
+    is: 'ds-input-native',
+    extendsElement: 'HTMLInputElement',
+    keyDifference: 'Use this instead of <ds-input> when you need a real <input> in the DOM — works natively with FormData, constraint validation API, autofill, and table/form contexts.',
+    safariSupport: 'Requires the @ungap/custom-elements polyfill.',
+    observedAttributes: [
+      {name: 'icon', type: 'string', description: 'Material Symbol icon name. Injects a positioned <span> sibling before the input and adds left padding via data-has-icon attribute.'},
+    ],
+    nativeAttributes: ['type', 'placeholder', 'value', 'disabled', 'required', 'name', 'min', 'max', 'pattern'],
+    nativeEvents: ['input', 'change', 'focus', 'blur'],
+    accessibilityNote: 'No built-in label — wrap in <label> or link via id/for.',
+    examples: [
+      '<label>Name <input is="ds-input-native" type="text" placeholder="Alice" name="name" /></label>',
+      '<input is="ds-input-native" type="email" placeholder="you@example.com" icon="mail" />',
+      '<input is="ds-input-native" type="password" placeholder="Password" required />',
+    ],
+  }),
+});
+
+registerMCPTool({
+  name: 'ds_input_native_set_value',
+  title: 'Set DS Input Native Value',
+  description: 'Set the value of a native ds-input-native element on the page and fire its input and change events.',
+  inputSchema: {
+    type: 'object',
+    required: ['value'],
+    properties: {
+      value: {type: 'string', description: 'The new value to set.'},
+      name: {type: 'string', description: 'Filter by the input\'s name attribute.'},
+      selector: {type: 'string', description: 'CSS selector targeting a specific input[is="ds-input-native"].'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[is="ds-input-native"]'));
+    let target: HTMLInputElement | null = null;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el instanceof HTMLInputElement) target = el;
+      } catch { /* invalid selector */ }
+    }
+    if (!target && typeof input['name'] === 'string' && input['name']) {
+      target = inputs.find(el => el.name === input['name']) ?? null;
+    }
+    if (!target) target = inputs[0] ?? null;
+
+    if (!target) {
+      const available = inputs.map(el => el.name || el.placeholder || el.type || '(unnamed)');
+      return {success: false, error: 'No matching ds-input-native found.', availableInputs: available};
+    }
+    target.value = String(input['value']);
+    target.dispatchEvent(new Event('input', {bubbles: true}));
+    target.dispatchEvent(new Event('change', {bubbles: true}));
+    return {success: true, value: target.value};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_input_native_get_values',
+  title: 'Get DS Input Native Values',
+  description: 'Read the current name and value of all ds-input-native elements on the page.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[is="ds-input-native"]'));
+    return inputs.map(el => ({
+      name: el.name || undefined,
+      type: el.type,
+      value: el.value,
+      placeholder: el.placeholder || undefined,
+    }));
+  },
+});

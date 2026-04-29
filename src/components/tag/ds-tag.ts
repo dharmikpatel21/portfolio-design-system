@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 export type TagVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -78,3 +79,24 @@ declare global {
     'ds-tag': DsTag;
   }
 }
+
+registerMCPTool({
+  name: 'ds_tag',
+  title: 'DS Tag',
+  description: 'Small rounded-corner category or status label. Unlike ds-badge (pill), tags use a rounded-md shape. Variants: primary, neutral, success, warning, danger. Tag: <ds-tag>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-tag',
+    properties: [
+      {name: 'label', type: 'string', description: 'Text inside the tag. Can also use default slot.'},
+      {name: 'variant', type: "'primary' | 'neutral' | 'success' | 'warning' | 'danger'", default: 'primary', reflected: true},
+    ],
+    slots: [{name: '(default)', description: 'Alternative to the label property.'}],
+    cssParts: ['tag'],
+    note: 'Use ds-tag for taxonomy labels (tech stack, categories). Use ds-badge for status/count indicators.',
+    examples: [
+      '<ds-tag label="TypeScript" variant="neutral"></ds-tag>',
+      '<ds-tag label="Active" variant="success"></ds-tag>',
+    ],
+  }),
+});

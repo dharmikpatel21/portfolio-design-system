@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsHero component
@@ -96,3 +97,26 @@ declare global {
     'ds-hero': DsHero;
   }
 }
+
+registerMCPTool({
+  name: 'ds_hero',
+  title: 'DS Hero',
+  description: 'Full-width hero/banner section with optional badge label, large title, description text, and an actions slot for CTA buttons. Centers all content. Tag: <ds-hero>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-hero',
+    properties: [
+      {name: 'title', type: 'string', description: 'Main heading (h1). Can also use "title" named slot.'},
+      {name: 'description', type: 'string', description: 'Subheading paragraph. Can also use "description" named slot.'},
+      {name: 'badgeText', type: 'string', description: 'If set, renders a ds-badge above the title.'},
+    ],
+    slots: [
+      {name: 'title', description: 'Appended inside the h1.'},
+      {name: 'description', description: 'Appended inside the description paragraph.'},
+      {name: 'actions', description: 'CTA buttons or links rendered in a centered flex row.'},
+      {name: '(default)', description: 'Additional content below the actions row.'},
+    ],
+    cssParts: ['hero'],
+    example: '<ds-hero title="Hello World" description="Welcome to the design system." badge-text="v2.0"><ds-button slot="actions" label="Get started"></ds-button></ds-hero>',
+  }),
+});

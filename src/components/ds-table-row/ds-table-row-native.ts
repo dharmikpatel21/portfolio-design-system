@@ -1,5 +1,6 @@
 import {IS_SAFARI_OR_WEBKIT} from '../../polyfills/custom-elements.js';
 import {DS_TABLE_ROW_TAG_STYLES} from './ds-table-row-base.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 let stylesInjected = false;
 function injectStyles() {
@@ -229,3 +230,59 @@ declare global {
     'ds-table-row-native': DsTableRowNative;
   }
 }
+
+registerMCPTool({
+  name: 'ds_table_row_native',
+  title: 'DS Table Row Native',
+  description: 'Customized built-in table row — extends the native <tr> element using the "is" attribute. Cell content is driven entirely by data-* attributes; no JS property binding needed. Safari uses the @ungap/custom-elements polyfill; Chromium/Gecko use a MutationObserver-based hydration system to handle framework-rendered rows that bypass the upgrade lifecycle. Usage: <tr is="ds-table-row-native">.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'tr',
+    is: 'ds-table-row-native',
+    extendsElement: 'HTMLTableRowElement',
+    keyDifference: 'Use this instead of <ds-table-row> when rendering inside a real <table>/<tbody> — browsers enforce that only valid table elements can be children of <tbody>.',
+    safariSupport: 'Uses @ungap/custom-elements polyfill (IS_SAFARI_OR_WEBKIT flag).',
+    chromiumGeckoSupport: 'Manual MutationObserver hydration handles rows inserted by Angular/React that skip the customElements upgrade lifecycle.',
+    observedAttributes: [
+      {name: 'data-row-id', type: 'string', description: 'Unique row identifier.'},
+      {name: 'data-columns', type: 'string', description: 'Comma-separated list of column keys in render order (e.g. "name,email,role").'},
+      {name: 'data-{columnKey}', type: 'string', description: 'One attribute per column key holding the cell value (e.g. data-name="Alice").'},
+    ],
+    slots: 'Child <td> elements placed in the markup are appended after the generated data cells — use for action buttons.',
+    examples: [
+      '<tr is="ds-table-row-native" data-row-id="1" data-columns="name,email,role" data-name="Alice" data-email="a@b.com" data-role="Admin"><td><button is="ds-button-native" variant="danger">Delete</button></td></tr>',
+    ],
+  }),
+});
+
+registerMCPTool({
+  name: 'ds_table_row_native_read',
+  title: 'Read DS Table Row Native Data',
+  description: 'Read all data from ds-table-row-native elements currently in the page.',
+  annotations: {readOnlyHint: true},
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'Optional CSS selector to scope the search (e.g. "#my-table tr[is=\'ds-table-row-native\']").'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let scope: Element | Document = document;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el) scope = el;
+      } catch { /* invalid selector — fall back to document */ }
+    }
+
+    const rows = Array.from(scope.querySelectorAll('tr[is="ds-table-row-native"]'));
+    if (rows.length === 0) return {success: false, error: 'No ds-table-row-native elements found.'};
+    return rows.map(row => {
+      const columns = (row.getAttribute('data-columns') ?? '').split(',').map(c => c.trim()).filter(Boolean);
+      const data: Record<string, string> = {};
+      columns.forEach(col => { data[col] = row.getAttribute(`data-${col}`) ?? '—'; });
+      return {rowId: row.getAttribute('data-row-id') ?? '', columns, data};
+    });
+  },
+});

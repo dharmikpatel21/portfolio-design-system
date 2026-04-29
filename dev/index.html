@@ -344,13 +344,18 @@
                 </td>
                 <td>
                   <div class="button-row">
-                    <button is="ds-button-native" variant="primary">
+                    <button
+                      is="ds-button-native"
+                      variant="primary"
+                      onclick="console.log('Button clicked! primary')"
+                    >
                       Standard
                     </button>
                     <button
                       is="ds-button-native"
                       variant="primary"
                       icon-prefix="save"
+                      onclick="console.log('Button clicked! prefix')"
                     >
                       Prefix
                     </button>
@@ -358,11 +363,17 @@
                       is="ds-button-native"
                       variant="primary"
                       icon-prefix="save"
+                      onclick="console.log('Button clicked!Both')"
                       icon-suffix="arrow_forward"
                     >
                       Both
                     </button>
-                    <button is="ds-button-native" variant="primary" tiny>
+                    <button
+                      is="ds-button-native"
+                      variant="primary"
+                      tiny
+                      onclick="console.log('Button clicked!Tiny')"
+                    >
                       Tiny
                     </button>
                     <button
@@ -370,6 +381,7 @@
                       variant="primary"
                       tiny
                       icon-prefix="save"
+                      onclick="console.log('Button clicked!Tiny Prefix')"
                     >
                       Tiny Prefix
                     </button>
@@ -391,17 +403,27 @@
                 </td>
                 <td>
                   <div class="button-row">
-                    <button is="ds-button-native" variant="secondary">
+                    <button
+                      is="ds-button-native"
+                      variant="secondary"
+                      onclick="console.log('Button clicked! Secondary')"
+                    >
                       Standard
                     </button>
                     <button
                       is="ds-button-native"
                       variant="secondary"
                       icon-prefix="edit"
+                      onclick="console.log('Button clicked! Secondary Prefix')"
                     >
                       Prefix
                     </button>
-                    <button is="ds-button-native" variant="secondary" tiny>
+                    <button
+                      is="ds-button-native"
+                      variant="secondary"
+                      tiny
+                      onclick="console.log('Button clicked! Secondary Tiny')"
+                    >
                       Tiny
                     </button>
                   </div>
@@ -422,17 +444,28 @@
                 </td>
                 <td>
                   <div class="button-row">
-                    <button is="ds-button-native" variant="slate">
+                    <button
+                      is="ds-button-native"
+                      variant="slate"
+                      onclick="console.log('Button clicked! Slate')"
+                    >
                       Standard
                     </button>
                     <button
                       is="ds-button-native"
                       variant="slate"
                       icon-prefix="settings"
+                      onclick="console.log('Button clicked! Slate Prefix')"
+                      icon-prefix="settings"
                     >
                       Prefix
                     </button>
-                    <button is="ds-button-native" variant="slate" tiny>
+                    <button
+                      is="ds-button-native"
+                      variant="slate"
+                      tiny
+                      onclick="console.log('Button clicked! Slate Tiny')"
+                    >
                       Tiny
                     </button>
                   </div>
@@ -453,17 +486,27 @@
                 </td>
                 <td>
                   <div class="button-row">
-                    <button is="ds-button-native" variant="danger">
+                    <button
+                      is="ds-button-native"
+                      variant="danger"
+                      onclick="console.log('Button clicked! Danger')"
+                    >
                       Delete
                     </button>
                     <button
                       is="ds-button-native"
                       variant="danger"
                       icon-prefix="delete"
+                      onclick="console.log('Button clicked! Danger Prefix')"
                     >
                       Prefix
                     </button>
-                    <button is="ds-button-native" variant="danger" tiny>
+                    <button
+                      is="ds-button-native"
+                      variant="danger"
+                      tiny
+                      onclick="console.log('Button clicked! Danger Tiny')"
+                    >
                       Tiny
                     </button>
                   </div>
@@ -484,17 +527,27 @@
                 </td>
                 <td>
                   <div class="button-row">
-                    <button is="ds-button-native" variant="ghost">
+                    <button
+                      is="ds-button-native"
+                      variant="ghost"
+                      onclick="console.log('Button clicked! Ghost')"
+                    >
                       Cancel
                     </button>
                     <button
                       is="ds-button-native"
                       variant="ghost"
                       icon-prefix="close"
+                      onclick="console.log('Button clicked! Ghost Prefix')"
                     >
                       Prefix
                     </button>
-                    <button is="ds-button-native" variant="ghost" tiny>
+                    <button
+                      is="ds-button-native"
+                      variant="ghost"
+                      tiny
+                      onclick="console.log('Button clicked! Ghost Tiny')"
+                    >
                       Tiny
                     </button>
                   </div>
@@ -506,11 +559,16 @@
                 <td class="variant-name">Icon Only</td>
                 <td>
                   <div class="button-row">
-                    <ds-button variant="icon" icon-prefix="add"></ds-button>
+                    <ds-button
+                      variant="icon"
+                      icon-prefix="add"
+                      onclick="console.log('Button clicked! Icon')"
+                    ></ds-button>
                     <ds-button
                       variant="icon"
                       icon-prefix="search"
                       tiny
+                      onclick="console.log('Button clicked! Icon Tiny')"
                     ></ds-button>
                   </div>
                 </td>
@@ -520,11 +578,14 @@
                       is="ds-button-native"
                       variant="icon"
                       icon-prefix="add"
+                      onclick="console.log('Button clicked! Icon')"
                     ></button>
                     <button
                       is="ds-button-native"
                       variant="icon"
                       icon-prefix="search"
+                      tiny
+                      onclick="console.log('Button clicked! Icon Tiny')"
                       tiny
                     ></button>
                   </div>
@@ -683,6 +744,18 @@
 
       modal.addEventListener('close', () => console.log('Modal closed'));
       sheet.addEventListener('close', () => console.log('Sheet closed'));
+
+      // Log clicks on all ds-button-native elements
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('button[is="ds-button-native"]');
+        if (button) {
+          console.log('DS Button Native clicked:', {
+            text: button.textContent.trim().replace(/\s+/g, ' '),
+            variant: button.getAttribute('variant'),
+            element: button
+          });
+        }
+      });
     </script>
   </body>
 </html>

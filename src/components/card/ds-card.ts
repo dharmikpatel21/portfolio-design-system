@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsCard component
@@ -146,3 +147,27 @@ declare global {
     'ds-card': DsCard;
   }
 }
+
+registerMCPTool({
+  name: 'ds_card',
+  title: 'DS Card',
+  description: 'Content card with optional image header, title, description, footer, and hover lift animation. Use the "media" slot to replace the image area with custom content. Tag: <ds-card>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-card',
+    properties: [
+      {name: 'image', type: 'string', description: 'URL of an image shown in the card header. Greyscale by default, colorizes on hover.'},
+      {name: 'title', type: 'string', description: 'Card heading.'},
+      {name: 'description', type: 'string', description: 'Body text below the title.'},
+      {name: 'footerText', type: 'string', description: 'Uppercase text in the footer area.'},
+      {name: 'footerIcon', type: 'string', description: 'Material Symbol icon name in the footer (e.g. "arrow_forward").'},
+    ],
+    slots: [
+      {name: 'media', description: 'Replaces the image area with arbitrary content.'},
+      {name: '(default)', description: 'Content inserted between description and footer.'},
+    ],
+    cssParts: ['card'],
+    cssVariables: ['--ds-bg-surface', '--ds-border-base', '--ds-color-primary'],
+    example: '<ds-card title="Project Alpha" description="A short summary." footer-text="View" footer-icon="arrow_forward"></ds-card>',
+  }),
+});

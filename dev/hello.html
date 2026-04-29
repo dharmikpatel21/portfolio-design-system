@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebMCP Demo</title>
+    <!-- WebMCP SDK -->
+    <script src="https://webmcp.dev/src/webmcp.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s ease;
+            background-color: #f8fafc;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h1 { color: #0f172a; }
+        p { color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebMCP Demo</h1>
+        <p>Connecting to WebMCP...</p>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Initialize WebMCP (optional: you can pass config here)
+        const mcp = new WebMCP();
+
+        // Register a tool that I (the AI) can call
+        mcp.registerTool(
+            'showAlert',
+            'Shows an alert message to the user on this page',
+            { 
+                message: { type: "string", description: "The message to display" } 
+            },
+            function(args) {
+                alert("AI says: " + args.message);
+                return {
+                    content: [{ type: "text", text: "Alert shown successfully" }]
+                };
+            }
+        );
+
+        // Register a tool to change background color
+        mcp.registerTool(
+            'setBackgroundColor',
+            'Changes the background color of the page',
+            { 
+                color: { type: "string", description: "A CSS color string (e.g. 'red', '#ff0000', 'rgb(255,0,0)')" } 
+            },
+            function(args) {
+                document.body.style.backgroundColor = args.color;
+                return {
+                    content: [{ type: "text", text: `Background color changed to ${args.color}` }]
+                };
+            }
+        );
+
+        console.log("WebMCP Tools registered!");
+    </script>
+</body>
+</html>

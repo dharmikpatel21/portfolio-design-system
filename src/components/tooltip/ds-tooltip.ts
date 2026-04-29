@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsTooltip component
@@ -90,3 +91,24 @@ declare global {
     'ds-tooltip': DsTooltip;
   }
 }
+
+registerMCPTool({
+  name: 'ds_tooltip',
+  title: 'DS Tooltip',
+  description: 'CSS-only hover tooltip that appears above or below its trigger content. Wrap any element as the default slot and set the content/title props. Tag: <ds-tooltip>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-tooltip',
+    properties: [
+      {name: 'content', type: 'string', description: 'Main tooltip body text.'},
+      {name: 'title', type: 'string', description: 'Optional small uppercase label above the body text.'},
+      {name: 'position', type: "'top' | 'bottom'", default: 'top', description: 'Whether the tooltip appears above or below the trigger.'},
+    ],
+    slots: [
+      {name: '(default)', description: 'The trigger element that the user hovers to reveal the tooltip.'},
+      {name: 'content', description: 'Custom tooltip body content (alternative to the content property).'},
+    ],
+    cssParts: ['trigger', 'content'],
+    example: '<ds-tooltip content="Copy to clipboard" position="top"><ds-button label="Copy" variant="ghost"></ds-button></ds-tooltip>',
+  }),
+});

@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsSkeleton component
@@ -86,3 +87,24 @@ declare global {
     'ds-skeleton': DsSkeleton;
   }
 }
+
+registerMCPTool({
+  name: 'ds_skeleton',
+  title: 'DS Skeleton',
+  description: 'Animated loading placeholder with shimmer sweep effect. Configurable dimensions and border-radius. Use pulse=false to switch from shimmer to a simple pulse animation. Tag: <ds-skeleton>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-skeleton',
+    properties: [
+      {name: 'width', type: 'string', default: '100%', description: 'CSS width value (e.g. "200px", "100%").'},
+      {name: 'height', type: 'string', default: '16px', description: 'CSS height value (e.g. "16px", "1rem").'},
+      {name: 'borderRadius', type: 'string', default: '8px', description: 'CSS border-radius value.'},
+      {name: 'pulse', type: 'boolean', default: true, description: 'When true uses shimmer + pulse animation. Set false for shimmer only.'},
+    ],
+    cssParts: ['skeleton'],
+    examples: [
+      '<ds-skeleton width="100%" height="20px"></ds-skeleton>',
+      '<ds-skeleton width="48px" height="48px" border-radius="50%"></ds-skeleton>',
+    ],
+  }),
+});

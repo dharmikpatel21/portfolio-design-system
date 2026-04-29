@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {registerMCPTool} from '../../webmcp/index.js';
 
 /**
  * DsAvatar component
@@ -88,3 +89,25 @@ declare global {
     'ds-avatar': DsAvatar;
   }
 }
+
+registerMCPTool({
+  name: 'ds_avatar',
+  title: 'DS Avatar',
+  description: 'Circular avatar component. Shows an image or falls back to initials text. Optional colored status dot (online/away/offline). Tag: <ds-avatar>.',
+  annotations: {readOnlyHint: true},
+  execute: async () => ({
+    tag: 'ds-avatar',
+    properties: [
+      {name: 'src', type: 'string', description: 'Image URL. If empty, shows initials.'},
+      {name: 'alt', type: 'string', description: 'Alt text for the image.'},
+      {name: 'initials', type: 'string', description: 'Text shown when no src (e.g. "JD").'},
+      {name: 'size', type: "'small' | 'medium' | 'large'", default: 'medium', description: '32px / 48px / 64px.'},
+      {name: 'status', type: "'online' | 'away' | 'offline' | undefined", description: 'Colored status dot. Omit to hide.'},
+    ],
+    cssParts: ['avatar', 'status'],
+    examples: [
+      '<ds-avatar src="/photo.jpg" alt="Jane Doe" size="medium" status="online"></ds-avatar>',
+      '<ds-avatar initials="JD" size="large" status="away"></ds-avatar>',
+    ],
+  }),
+});
