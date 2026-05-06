@@ -25,14 +25,126 @@ declare global {
 
 const _registered = new Set<string>();
 
-export function registerMCPTool(tool: MCPToolDefinition): void {
-  if (_registered.has(tool.name)) return;
-  if (typeof navigator !== 'undefined' && navigator.modelContext) {
-    try {
-      navigator.modelContext.registerTool(tool);
-      _registered.add(tool.name);
-    } catch {
-      // Ignore duplicate-name or other registration errors
+class WebMCPWidgetBridge {
+  private static instance: WebMCPWidgetBridge;
+  private widget: any = null;
+  private pendingTools: MCPToolDefinition[] = [];
+
+  static getInstance(): WebMCPWidgetBridge {
+    if (!WebMCPWidgetBridge.instance) {
+      WebMCPWidgetBridge.instance = new WebMCPWidgetBridge();
+    }
+    return WebMCPWidgetBridge.instance;
+  }
+
+  private constructor() {
+    console.log('[WebMCP] Bridge initialized, checking for meta tag...');
+    this.ensureWidgetLoaded();
+  }
+
+  registerTool(tool: MCPToolDefinition): void {
+    console.log(`[WebMCP] Registering tool: ${tool.name}`);
+    if (this.widget) {
+      this.widget.registerTool(
+        tool.name,
+        tool.description,
+        tool.inputSchema || {},
+        tool.execute
+      );
+    } else {
+      console.log(`[WebMCP] Widget not ready, queuing tool: ${tool.name}`);
+      this.pendingTools.push(tool);
     }
   }
+
+  private ensureWidgetLoaded(): void {
+    if (typeof window === 'undefined') return;
+
+    // 1. Check if already loaded via a manual <script> tag
+    if ((window as any).WebMCP) {
+      console.log('[WebMCP] WebMCP detected in window. Initializing...');
+      this.initWidget();
+      return;
+    }
+
+    // 2. Fallback: Discovery via meta tag
+    const metaTag = document.querySelector('meta[name="webmcp-server"]');
+    if (metaTag) {
+      const serverUrl = metaTag.getAttribute('content');
+      if (serverUrl) {
+        console.log(
+          `[WebMCP] Meta tag found: ${serverUrl}. Injecting widget...`
+        );
+        this.injectScript(`${serverUrl}/webmcp.js`);
+        return;
+      }
+    }
+
+    console.log(
+      '[WebMCP] No manual script or meta tag found. Bridge waiting...'
+    );
+  }
+
+  private injectScript(url: string): void {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = () => {
+      console.log('[WebMCP] Widget script loaded successfully.');
+      this.initWidget();
+    };
+    script.onerror = (e) => {
+      console.error('[WebMCP] Failed to load widget script from:', url, e);
+    };
+    document.head.appendChild(script);
+  }
+
+  private initWidget() {
+    console.log('[WebMCP] Initializing widget instance...');
+    if (!(window as any).WebMCP) {
+      console.error('[WebMCP] window.WebMCP is still not defined!');
+      return;
+    }
+
+    // ESBuild with globalName: 'WebMCP' exports an object containing the module's exports.
+    // Since we export class WebMCP, it's located at window.WebMCP.WebMCP
+    const WebMCPClass = (window as any).WebMCP.WebMCP || (window as any).WebMCP;
+
+    try {
+      this.widget = new WebMCPClass();
+      console.log('[WebMCP] Widget instance created successfully.');
+
+      // Flush pending tools
+      console.log(
+        `[WebMCP] Flushing ${this.pendingTools.length} pending tools...`
+      );
+      for (const tool of this.pendingTools) {
+        this.widget.registerTool(
+          tool.name,
+          tool.description,
+          tool.inputSchema || {},
+          tool.execute
+        );
+      }
+      this.pendingTools = [];
+    } catch (e) {
+      console.error('[WebMCP] Failed to initialize WebMCP widget:', e);
+    }
+  }
+}
+
+export function registerMCPTool(tool: MCPToolDefinition): void {
+  // ① Existing path: Chrome native navigator.modelContext
+  if (!_registered.has(tool.name)) {
+    if (typeof navigator !== 'undefined' && navigator.modelContext) {
+      try {
+        navigator.modelContext.registerTool(tool);
+        _registered.add(tool.name);
+      } catch {
+        // Ignore duplicate-name or other registration errors
+      }
+    }
+  }
+
+  // ② New path: WebMCP Widget relay (works regardless of browser API)
+  WebMCPWidgetBridge.getInstance().registerTool(tool);
 }
