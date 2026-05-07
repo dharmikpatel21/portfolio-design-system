@@ -143,7 +143,7 @@ registerMCPTool({
       src: {type: 'string', description: 'New image URL. Set to empty string to clear.'},
       alt: {type: 'string', description: 'New alt text for the image.'},
       size: {type: 'string', enum: ['small', 'medium', 'large'], description: 'New size.'},
-      status: {type: 'string', enum: ['online', 'away', 'offline', ''], description: 'New status dot. Empty string removes the dot.'},
+      status: {type: 'string', enum: ['online', 'away', 'offline', 'none'], description: 'New status dot color. Pass "none" to remove the dot.'},
     },
   },
   execute: async (input: Record<string, unknown>) => {
@@ -164,7 +164,7 @@ registerMCPTool({
 
     for (const [key, val] of Object.entries(props)) {
       if (val !== null) {
-        if (val === '' && key === 'status') target.removeAttribute(key);
+        if (val === 'none' && key === 'status') target.removeAttribute(key);
         else (target as any)[key] = val;
       }
     }
