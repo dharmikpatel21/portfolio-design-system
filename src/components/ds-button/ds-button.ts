@@ -133,14 +133,25 @@ registerMCPTool({
       }
     }
 
-    // Fall back to label attribute matching
+    // Fall back to label attribute or text content matching
     if (!target && typeof input['label'] === 'string' && input['label']) {
-      target = buttons.find(b => b.getAttribute('label') === input['label']) ?? null;
+      target =
+        buttons.find(
+          (b) =>
+            b.getAttribute('label') === input['label'] ||
+            b.textContent?.trim() === input['label']
+        ) ?? null;
     }
 
     if (!target) {
-      const available = buttons.map(b => b.getAttribute('label')).filter(Boolean);
-      return {success: false, error: 'No matching ds-button found.', availableButtons: available};
+      const available = buttons
+        .map((b) => b.getAttribute('label') || b.textContent?.trim())
+        .filter(Boolean);
+      return {
+        success: false,
+        error: 'No matching ds-button found.',
+        availableButtons: available,
+      };
     }
     if (target.hasAttribute('disabled')) return {success: false, error: 'Button is disabled.'};
     (target as HTMLElement).click();

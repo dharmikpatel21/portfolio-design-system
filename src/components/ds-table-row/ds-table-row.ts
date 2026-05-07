@@ -60,3 +60,35 @@ registerMCPTool({
     example: `<ds-table-row row-id="1" .columns=\${['name','email']} .rowData=\${{name:'Alice',email:'a@b.com'}}>\n  <td><button>Delete</button></td>\n</ds-table-row>`,
   }),
 });
+
+registerMCPTool({
+  name: 'ds_table_row_read',
+  title: 'Read DS Table Row Data',
+  description: 'Read all data from ds-table-row elements currently in the page.',
+  annotations: {readOnlyHint: true},
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'Optional CSS selector to scope the search (e.g. "ds-table-row").'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let scope: Element | Document = document;
+
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el) scope = el;
+      } catch { /* invalid selector */ }
+    }
+
+    const rows = Array.from(scope.querySelectorAll('ds-table-row')) as any[];
+    if (rows.length === 0) return {success: false, error: 'No ds-table-row elements found.'};
+
+    return rows.map(row => ({
+      rowId: row.rowId ?? row.getAttribute('row-id') ?? '',
+      columns: row.columns ?? [],
+      data: row.rowData ?? {},
+    }));
+  },
+});
