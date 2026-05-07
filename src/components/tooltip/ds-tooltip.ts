@@ -112,3 +112,20 @@ registerMCPTool({
     example: '<ds-tooltip content="Copy to clipboard" position="top"><ds-button label="Copy" variant="ghost"></ds-button></ds-tooltip>',
   }),
 });
+
+registerMCPTool({
+  name: 'ds_tooltip_read',
+  title: 'Read DS Tooltips',
+  description: 'List all ds-tooltip elements on the page with their content, title, position, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const tooltips = Array.from(document.querySelectorAll('ds-tooltip'));
+    return tooltips.map((t, i) => ({
+      index: i,
+      selector: t.id ? `#${t.id}` : `ds-tooltip:nth-of-type(${i + 1})`,
+      content: t.getAttribute('content') ?? '',
+      title: t.getAttribute('title') ?? '',
+      position: t.getAttribute('position') ?? 'top',
+    }));
+  },
+});

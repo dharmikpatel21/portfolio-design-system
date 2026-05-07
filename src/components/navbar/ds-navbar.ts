@@ -220,3 +220,47 @@ registerMCPTool({
     example: '<ds-navbar logo-text="MyApp" logo-icon="rocket_launch" version="1.0"><a href="/">Home</a><a href="/about">About</a></ds-navbar>',
   }),
 });
+
+registerMCPTool({
+  name: 'ds_navbar_read',
+  title: 'Read DS Navbars',
+  description: 'List all ds-navbar elements on the page with their logoText, logoIcon, version, and mobile menu open state.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const navbars = Array.from(document.querySelectorAll('ds-navbar'));
+    return navbars.map((n, i) => ({
+      index: i,
+      selector: n.id ? `#${n.id}` : `ds-navbar:nth-of-type(${i + 1})`,
+      logoText: n.getAttribute('logoText') ?? n.getAttribute('logo-text') ?? '',
+      logoIcon: n.getAttribute('logoIcon') ?? n.getAttribute('logo-icon') ?? '',
+      version: n.getAttribute('version') ?? '',
+      isMenuOpen: n.hasAttribute('isMenuOpen') || n.getAttribute('isMenuOpen') === 'true',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_navbar_toggle_menu',
+  title: 'Toggle DS Navbar Mobile Menu',
+  description: 'Open or close the mobile menu sheet of a ds-navbar on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-navbar. Defaults to the first one found.'},
+      open: {type: 'boolean', description: 'true to open, false to close. Omit to toggle current state.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-navbar');
+    if (!target) return {success: false, error: 'No ds-navbar found on the page.'};
+
+    const navbar = target as HTMLElement & {isMenuOpen: boolean};
+    const next = typeof input['open'] === 'boolean' ? input['open'] : !navbar.isMenuOpen;
+    navbar.isMenuOpen = next;
+    return {success: true, isMenuOpen: next};
+  },
+});

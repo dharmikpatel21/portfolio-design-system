@@ -92,3 +92,54 @@ registerMCPTool({
     }));
   },
 });
+
+registerMCPTool({
+  name: 'ds_table_row_delete',
+  title: 'Delete DS Table Row',
+  description: 'Remove a ds-table-row element from the DOM by its rowId or a CSS selector.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      rowId: {type: 'string', description: 'The row-id attribute value of the row to delete.'},
+      selector: {type: 'string', description: 'CSS selector targeting a specific ds-table-row.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target && typeof input['rowId'] === 'string' && input['rowId']) {
+      target = document.querySelector(`ds-table-row[row-id="${input['rowId']}"]`);
+    }
+    if (!target) return {success: false, error: 'No matching ds-table-row found.'};
+    const id = target.getAttribute('row-id') ?? '';
+    target.remove();
+    return {success: true, deleted: id};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_table_row_update_cell',
+  title: 'Update DS Table Row Cell',
+  description: 'Update a specific cell value in a ds-table-row by rowId and column key.',
+  inputSchema: {
+    type: 'object',
+    required: ['rowId', 'column', 'value'],
+    properties: {
+      rowId: {type: 'string', description: 'The row-id attribute value of the target row.'},
+      column: {type: 'string', description: 'The column key to update (must be in the row\'s columns array).'},
+      value: {type: 'string', description: 'The new cell value.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    if (typeof input['rowId'] !== 'string' || typeof input['column'] !== 'string' || typeof input['value'] !== 'string') {
+      return {success: false, error: 'rowId, column, and value are required strings.'};
+    }
+    const row = document.querySelector(`ds-table-row[row-id="${input['rowId']}"]`) as any;
+    if (!row) return {success: false, error: `No ds-table-row found with row-id="${input['rowId']}".`};
+    if (!row.rowData) return {success: false, error: 'Row has no rowData property.'};
+    row.rowData = {...row.rowData, [input['column']]: input['value']};
+    return {success: true, rowId: input['rowId'], column: input['column'], value: input['value']};
+  },
+});

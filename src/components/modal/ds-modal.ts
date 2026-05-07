@@ -281,3 +281,20 @@ registerMCPTool({
     return {success: true};
   },
 });
+
+registerMCPTool({
+  name: 'ds_modal_read',
+  title: 'Read DS Modals',
+  description: 'List all ds-modal elements on the page with their title, open state, size, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const modals = Array.from(document.querySelectorAll('ds-modal'));
+    return modals.map((m, i) => ({
+      index: i,
+      selector: m.id ? `#${m.id}` : `ds-modal:nth-of-type(${i + 1})`,
+      title: m.getAttribute('title') ?? '',
+      open: m.hasAttribute('open'),
+      size: m.getAttribute('size') ?? 'md',
+    }));
+  },
+});

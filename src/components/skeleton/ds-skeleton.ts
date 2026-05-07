@@ -108,3 +108,75 @@ registerMCPTool({
     ],
   }),
 });
+
+registerMCPTool({
+  name: 'ds_skeleton_read',
+  title: 'Read DS Skeletons',
+  description: 'List all ds-skeleton elements on the page with their width, height, borderRadius, and pulse state.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const skeletons = Array.from(document.querySelectorAll('ds-skeleton'));
+    return skeletons.map((s, i) => ({
+      index: i,
+      selector: s.id ? `#${s.id}` : `ds-skeleton:nth-of-type(${i + 1})`,
+      width: s.getAttribute('width') ?? '100%',
+      height: s.getAttribute('height') ?? '16px',
+      borderRadius: s.getAttribute('borderRadius') ?? s.getAttribute('border-radius') ?? '8px',
+      pulse: !s.hasAttribute('pulse') || s.getAttribute('pulse') !== 'false',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_skeleton_add',
+  title: 'Add DS Skeleton',
+  description: 'Inject a new ds-skeleton loading placeholder into a target container on the page.',
+  inputSchema: {
+    type: 'object',
+    required: ['targetSelector'],
+    properties: {
+      targetSelector: {type: 'string', description: 'CSS selector for the container element to append the skeleton into.'},
+      width: {type: 'string', description: 'CSS width (e.g. "100%", "200px"). Defaults to "100%".'},
+      height: {type: 'string', description: 'CSS height (e.g. "20px", "1rem"). Defaults to "16px".'},
+      borderRadius: {type: 'string', description: 'CSS border-radius. Defaults to "8px". Use "50%" for circular.'},
+      pulse: {type: 'boolean', description: 'Enable shimmer animation. Defaults to true.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    if (typeof input['targetSelector'] !== 'string') return {success: false, error: 'targetSelector is required.'};
+    const container = document.querySelector(input['targetSelector']);
+    if (!container) return {success: false, error: `No element found for selector: ${input['targetSelector']}`};
+
+    const skeleton = document.createElement('ds-skeleton');
+    if (typeof input['width'] === 'string') skeleton.setAttribute('width', input['width']);
+    if (typeof input['height'] === 'string') skeleton.setAttribute('height', input['height']);
+    if (typeof input['borderRadius'] === 'string') skeleton.setAttribute('border-radius', input['borderRadius']);
+    if (input['pulse'] === false) skeleton.setAttribute('pulse', 'false');
+    container.appendChild(skeleton);
+    return {success: true};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_skeleton_remove_all',
+  title: 'Remove All DS Skeletons',
+  description: 'Remove all ds-skeleton elements from the page (useful when loading is complete).',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'Optional scope selector to only remove skeletons inside a specific container.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let scope: Element | Document = document;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try {
+        const el = document.querySelector(input['selector']);
+        if (el) scope = el;
+      } catch { /* invalid selector */ }
+    }
+    const skeletons = Array.from(scope.querySelectorAll('ds-skeleton'));
+    skeletons.forEach(s => s.remove());
+    return {success: true, removed: skeletons.length};
+  },
+});

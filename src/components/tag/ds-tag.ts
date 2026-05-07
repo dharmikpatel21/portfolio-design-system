@@ -100,3 +100,45 @@ registerMCPTool({
     ],
   }),
 });
+
+registerMCPTool({
+  name: 'ds_tag_read',
+  title: 'Read DS Tags',
+  description: 'List all ds-tag elements on the page with their label, variant, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const tags = Array.from(document.querySelectorAll('ds-tag'));
+    return tags.map((t, i) => ({
+      index: i,
+      selector: t.id ? `#${t.id}` : `ds-tag:nth-of-type(${i + 1})`,
+      label: t.getAttribute('label') ?? t.textContent?.trim() ?? '',
+      variant: t.getAttribute('variant') ?? 'primary',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_tag_update',
+  title: 'Update DS Tag',
+  description: 'Update the label or variant of a ds-tag element on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-tag. Defaults to the first one found.'},
+      label: {type: 'string', description: 'New tag label text.'},
+      variant: {type: 'string', enum: ['primary', 'neutral', 'success', 'warning', 'danger'], description: 'New variant.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-tag');
+    if (!target) return {success: false, error: 'No ds-tag found on the page.'};
+
+    if (typeof input['label'] === 'string') (target as any).label = input['label'];
+    if (typeof input['variant'] === 'string') (target as any).variant = input['variant'];
+    return {success: true};
+  },
+});

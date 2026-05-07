@@ -183,3 +183,22 @@ registerMCPTool({
     return {success: true};
   },
 });
+
+registerMCPTool({
+  name: 'ds_banner_read',
+  title: 'Read DS Banners',
+  description: 'List all ds-banner elements on the page with their title, description, variant, icon, and dismissible state.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const banners = Array.from(document.querySelectorAll('ds-banner'));
+    return banners.map((b, i) => ({
+      index: i,
+      selector: b.id ? `#${b.id}` : `ds-banner:nth-of-type(${i + 1})`,
+      title: b.getAttribute('title') ?? '',
+      description: b.getAttribute('description') ?? '',
+      variant: b.getAttribute('variant') ?? 'info',
+      icon: b.getAttribute('icon') ?? 'info',
+      dismissible: b.hasAttribute('dismissible'),
+    }));
+  },
+});

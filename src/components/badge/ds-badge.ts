@@ -96,3 +96,45 @@ registerMCPTool({
     ],
   }),
 });
+
+registerMCPTool({
+  name: 'ds_badge_read',
+  title: 'Read DS Badges',
+  description: 'List all ds-badge elements on the page with their label, variant, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const badges = Array.from(document.querySelectorAll('ds-badge'));
+    return badges.map((b, i) => ({
+      index: i,
+      selector: b.id ? `#${b.id}` : `ds-badge:nth-of-type(${i + 1})`,
+      label: b.getAttribute('label') ?? b.textContent?.trim() ?? '',
+      variant: b.getAttribute('variant') ?? 'primary',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_badge_update',
+  title: 'Update DS Badge',
+  description: 'Update the label or variant of a ds-badge element on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-badge. Defaults to the first one found.'},
+      label: {type: 'string', description: 'New badge label text.'},
+      variant: {type: 'string', enum: ['primary', 'secondary', 'success', 'warning', 'danger', 'outline'], description: 'New variant.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-badge');
+    if (!target) return {success: false, error: 'No ds-badge found on the page.'};
+
+    if (typeof input['label'] === 'string') (target as any).label = input['label'];
+    if (typeof input['variant'] === 'string') (target as any).variant = input['variant'];
+    return {success: true};
+  },
+});

@@ -283,3 +283,20 @@ registerMCPTool({
     return {success: true};
   },
 });
+
+registerMCPTool({
+  name: 'ds_sheet_read',
+  title: 'Read DS Sheets',
+  description: 'List all ds-sheet elements on the page with their title, open state, side, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const sheets = Array.from(document.querySelectorAll('ds-sheet'));
+    return sheets.map((s, i) => ({
+      index: i,
+      selector: s.id ? `#${s.id}` : `ds-sheet:nth-of-type(${i + 1})`,
+      title: s.getAttribute('title') ?? '',
+      open: s.hasAttribute('open'),
+      side: s.getAttribute('side') ?? 'right',
+    }));
+  },
+});

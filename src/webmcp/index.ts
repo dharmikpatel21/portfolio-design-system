@@ -148,3 +148,41 @@ export function registerMCPTool(tool: MCPToolDefinition): void {
   // ② New path: WebMCP Widget relay (works regardless of browser API)
   WebMCPWidgetBridge.getInstance().registerTool(tool);
 }
+
+// ─── Global Page Snapshot ────────────────────────────────────────────────────
+
+registerMCPTool({
+  name: 'ds_page_snapshot',
+  title: 'DS Page Snapshot',
+  description: 'Returns a full snapshot of every Portfolio Design System component currently on the page — their element tags, counts, and key attribute values. Use this before making changes to understand the current page layout.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const q = (sel: string) => Array.from(document.querySelectorAll(sel));
+    const attr = (el: Element, ...names: string[]) => {
+      for (const n of names) { const v = el.getAttribute(n); if (v !== null) return v; }
+      return '';
+    };
+
+    return {
+      navbar: q('ds-navbar').map((e, i) => ({index: i, logoText: attr(e, 'logoText', 'logo-text'), version: attr(e, 'version'), isMenuOpen: e.hasAttribute('isMenuOpen')})),
+      hero: q('ds-hero').map((e, i) => ({index: i, title: attr(e, 'title'), description: attr(e, 'description'), badgeText: attr(e, 'badgeText', 'badge-text')})),
+      buttons: q('ds-button').map((e, i) => ({index: i, label: attr(e, 'label') || e.textContent?.trim(), variant: attr(e, 'variant') || 'primary', disabled: e.hasAttribute('disabled')})),
+      buttonNatives: q('button[is="ds-button-native"]').map((e, i) => ({index: i, text: e.textContent?.trim(), variant: attr(e, 'variant') || 'primary'})),
+      modals: q('ds-modal').map((e, i) => ({index: i, id: e.id || undefined, title: attr(e, 'title'), open: e.hasAttribute('open'), size: attr(e, 'size') || 'md'})),
+      sheets: q('ds-sheet').map((e, i) => ({index: i, id: e.id || undefined, title: attr(e, 'title'), open: e.hasAttribute('open'), side: attr(e, 'side') || 'right'})),
+      inputs: q('ds-input').map((e, i) => ({index: i, label: attr(e, 'label'), type: attr(e, 'type') || 'text', value: (e as any).value ?? ''})),
+      inputNatives: q('input[is="ds-input-native"]').map((e, i) => ({index: i, name: (e as HTMLInputElement).name, type: (e as HTMLInputElement).type, value: (e as HTMLInputElement).value})),
+      dropdowns: q('ds-dropdown').map((e, i) => ({index: i, label: attr(e, 'label'), value: (e as any).value ?? ''})  ),
+      dropdownNatives: q('select[is="ds-dropdown-native"]').map((e, i) => ({index: i, name: (e as HTMLSelectElement).name, value: (e as HTMLSelectElement).value})),
+      cards: q('ds-card').map((e, i) => ({index: i, title: attr(e, 'title'), description: attr(e, 'description')})),
+      avatars: q('ds-avatar').map((e, i) => ({index: i, initials: attr(e, 'initials'), size: attr(e, 'size') || 'medium', status: attr(e, 'status') || null})),
+      badges: q('ds-badge').map((e, i) => ({index: i, label: attr(e, 'label'), variant: attr(e, 'variant') || 'primary'})),
+      tags: q('ds-tag').map((e, i) => ({index: i, label: attr(e, 'label'), variant: attr(e, 'variant') || 'primary'})),
+      banners: q('ds-banner').map((e, i) => ({index: i, title: attr(e, 'title'), variant: attr(e, 'variant') || 'info', dismissible: e.hasAttribute('dismissible')})),
+      skeletons: q('ds-skeleton').map((e, i) => ({index: i, width: attr(e, 'width') || '100%', height: attr(e, 'height') || '16px'})),
+      tooltips: q('ds-tooltip').map((e, i) => ({index: i, content: attr(e, 'content'), position: attr(e, 'position') || 'top'})),
+      tableRows: q('ds-table-row').map((e, i) => ({index: i, rowId: attr(e, 'row-id')})),
+      tableRowNatives: q('tr[is="ds-table-row-native"]').map((e, i) => ({index: i, rowId: attr(e, 'data-row-id')})),
+    };
+  },
+});

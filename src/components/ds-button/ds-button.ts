@@ -158,3 +158,23 @@ registerMCPTool({
     return {success: true, clicked: target.getAttribute('label') ?? target.textContent?.trim()};
   },
 });
+
+registerMCPTool({
+  name: 'ds_button_read',
+  title: 'Read DS Buttons',
+  description: 'List all ds-button elements on the page with their current label, variant, disabled state, and DOM selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const buttons = Array.from(document.querySelectorAll('ds-button'));
+    return buttons.map((b, i) => ({
+      index: i,
+      selector: b.id ? `#${b.id}` : `ds-button:nth-of-type(${i + 1})`,
+      label: b.getAttribute('label') ?? b.textContent?.trim() ?? '',
+      variant: b.getAttribute('variant') ?? 'primary',
+      disabled: b.hasAttribute('disabled'),
+      tiny: b.hasAttribute('tiny'),
+      iconPrefix: b.getAttribute('icon-prefix') ?? '',
+      iconSuffix: b.getAttribute('icon-suffix') ?? '',
+    }));
+  },
+});

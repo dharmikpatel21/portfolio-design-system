@@ -111,3 +111,63 @@ registerMCPTool({
     ],
   }),
 });
+
+registerMCPTool({
+  name: 'ds_avatar_read',
+  title: 'Read DS Avatars',
+  description: 'List all ds-avatar elements on the page with their current initials, src, size, status, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const avatars = Array.from(document.querySelectorAll('ds-avatar'));
+    return avatars.map((a, i) => ({
+      index: i,
+      selector: a.id ? `#${a.id}` : `ds-avatar:nth-of-type(${i + 1})`,
+      initials: a.getAttribute('initials') ?? '',
+      src: a.getAttribute('src') ?? '',
+      alt: a.getAttribute('alt') ?? '',
+      size: a.getAttribute('size') ?? 'medium',
+      status: a.getAttribute('status') ?? null,
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_avatar_update',
+  title: 'Update DS Avatar',
+  description: 'Update properties (initials, src, size, status) of a ds-avatar element on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-avatar. Defaults to the first one found.'},
+      initials: {type: 'string', description: 'New initials text (e.g. "JD").'},
+      src: {type: 'string', description: 'New image URL. Set to empty string to clear.'},
+      alt: {type: 'string', description: 'New alt text for the image.'},
+      size: {type: 'string', enum: ['small', 'medium', 'large'], description: 'New size.'},
+      status: {type: 'string', enum: ['online', 'away', 'offline', ''], description: 'New status dot. Empty string removes the dot.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-avatar');
+    if (!target) return {success: false, error: 'No ds-avatar found on the page.'};
+
+    const props: Record<string, string | null> = {
+      initials: typeof input['initials'] === 'string' ? input['initials'] : null,
+      src: typeof input['src'] === 'string' ? input['src'] : null,
+      alt: typeof input['alt'] === 'string' ? input['alt'] : null,
+      size: typeof input['size'] === 'string' ? input['size'] : null,
+      status: typeof input['status'] === 'string' ? (input['status'] || null) : null,
+    };
+
+    for (const [key, val] of Object.entries(props)) {
+      if (val !== null) {
+        if (val === '' && key === 'status') target.removeAttribute(key);
+        else (target as any)[key] = val;
+      }
+    }
+    return {success: true};
+  },
+});

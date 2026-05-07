@@ -120,3 +120,48 @@ registerMCPTool({
     example: '<ds-hero title="Hello World" description="Welcome to the design system." badge-text="v2.0"><ds-button slot="actions" label="Get started"></ds-button></ds-hero>',
   }),
 });
+
+registerMCPTool({
+  name: 'ds_hero_read',
+  title: 'Read DS Hero',
+  description: 'List all ds-hero elements on the page with their title, description, and badgeText.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const heros = Array.from(document.querySelectorAll('ds-hero'));
+    return heros.map((h, i) => ({
+      index: i,
+      selector: h.id ? `#${h.id}` : `ds-hero:nth-of-type(${i + 1})`,
+      title: h.getAttribute('title') ?? '',
+      description: h.getAttribute('description') ?? '',
+      badgeText: h.getAttribute('badgeText') ?? h.getAttribute('badge-text') ?? '',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_hero_update',
+  title: 'Update DS Hero',
+  description: 'Update the title, description, or badgeText of a ds-hero element on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-hero. Defaults to the first one found.'},
+      title: {type: 'string', description: 'New hero heading text.'},
+      description: {type: 'string', description: 'New hero subheading text.'},
+      badgeText: {type: 'string', description: 'New badge label above the title. Empty string removes it.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-hero');
+    if (!target) return {success: false, error: 'No ds-hero found on the page.'};
+
+    if (typeof input['title'] === 'string') (target as any).title = input['title'];
+    if (typeof input['description'] === 'string') (target as any).description = input['description'];
+    if (typeof input['badgeText'] === 'string') (target as any).badgeText = input['badgeText'];
+    return {success: true};
+  },
+});

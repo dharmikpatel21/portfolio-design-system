@@ -183,3 +183,30 @@ registerMCPTool({
     return {success: true, clicked: buttonText(target)};
   },
 });
+
+registerMCPTool({
+  name: 'ds_button_native_read',
+  title: 'Read DS Button Native Elements',
+  description: 'List all button[is="ds-button-native"] elements on the page with their current text, variant, disabled state, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const buttonText = (btn: HTMLButtonElement) =>
+      Array.from(btn.childNodes)
+        .filter(n => !(n instanceof Element && n.hasAttribute('data-ds-icon')))
+        .map(n => n.textContent ?? '')
+        .join('')
+        .trim();
+
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('button[is="ds-button-native"]'));
+    return buttons.map((b, i) => ({
+      index: i,
+      selector: b.id ? `#${b.id}` : `button[is="ds-button-native"]:nth-of-type(${i + 1})`,
+      text: buttonText(b),
+      variant: b.getAttribute('variant') ?? 'primary',
+      disabled: b.disabled,
+      tiny: b.hasAttribute('tiny'),
+      iconPrefix: b.getAttribute('icon-prefix') ?? '',
+      iconSuffix: b.getAttribute('icon-suffix') ?? '',
+    }));
+  },
+});

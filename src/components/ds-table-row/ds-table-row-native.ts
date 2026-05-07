@@ -286,3 +286,53 @@ registerMCPTool({
     });
   },
 });
+
+registerMCPTool({
+  name: 'ds_table_row_native_delete',
+  title: 'Delete DS Table Row Native',
+  description: 'Remove a tr[is="ds-table-row-native"] element from the DOM by its data-row-id.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      rowId: {type: 'string', description: 'The data-row-id attribute value of the row to delete.'},
+      selector: {type: 'string', description: 'CSS selector targeting a specific native table row.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target && typeof input['rowId'] === 'string' && input['rowId']) {
+      target = document.querySelector(`tr[is="ds-table-row-native"][data-row-id="${input['rowId']}"]`);
+    }
+    if (!target) return {success: false, error: 'No matching ds-table-row-native found.'};
+    const id = target.getAttribute('data-row-id') ?? '';
+    target.remove();
+    return {success: true, deleted: id};
+  },
+});
+
+registerMCPTool({
+  name: 'ds_table_row_native_update_cell',
+  title: 'Update DS Table Row Native Cell',
+  description: 'Update a data-* attribute on a tr[is="ds-table-row-native"] row, causing the cell to re-render.',
+  inputSchema: {
+    type: 'object',
+    required: ['rowId', 'column', 'value'],
+    properties: {
+      rowId: {type: 'string', description: 'The data-row-id of the target row.'},
+      column: {type: 'string', description: 'The column key (e.g. "name" updates data-name attribute).'},
+      value: {type: 'string', description: 'The new cell value.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    if (typeof input['rowId'] !== 'string' || typeof input['column'] !== 'string' || typeof input['value'] !== 'string') {
+      return {success: false, error: 'rowId, column, and value are required strings.'};
+    }
+    const row = document.querySelector(`tr[is="ds-table-row-native"][data-row-id="${input['rowId']}"]`);
+    if (!row) return {success: false, error: `No row found with data-row-id="${input['rowId']}".`};
+    row.setAttribute(`data-${input['column']}`, input['value']);
+    return {success: true, rowId: input['rowId'], column: input['column'], value: input['value']};
+  },
+});

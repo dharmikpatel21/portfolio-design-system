@@ -136,3 +136,23 @@ registerMCPTool({
     return {success: true, value: target.value};
   },
 });
+
+registerMCPTool({
+  name: 'ds_dropdown_native_read',
+  title: 'Read DS Dropdown Native Elements',
+  description: 'List all select[is="ds-dropdown-native"] elements on the page with their name, current value, and available options.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const selects = Array.from(document.querySelectorAll<HTMLSelectElement>('select[is="ds-dropdown-native"]'));
+    return selects.map((s, i) => ({
+      index: i,
+      selector: s.id ? `#${s.id}` : `select[is="ds-dropdown-native"]:nth-of-type(${i + 1})`,
+      name: s.name || undefined,
+      value: s.value,
+      disabled: s.disabled,
+      options: Array.from(s.options)
+        .filter(o => o.value !== '')
+        .map(o => ({value: o.value, label: o.text})),
+    }));
+  },
+});

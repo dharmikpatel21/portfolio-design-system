@@ -137,3 +137,30 @@ registerMCPTool({
     return {success: true, value: input['value']};
   },
 });
+
+registerMCPTool({
+  name: 'ds_dropdown_read',
+  title: 'Read DS Dropdowns',
+  description: 'List all ds-dropdown elements on the page with their label, current value, and available options.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const dropdowns = Array.from(document.querySelectorAll('ds-dropdown'));
+    return dropdowns.map((d, i) => {
+      const el = d as HTMLElement & {value: string; options: Array<{value: string; label: string}>};
+      const nativeSelect = d.shadowRoot?.querySelector('select');
+      const opts = nativeSelect
+        ? Array.from(nativeSelect.options)
+            .filter(o => o.value !== '')
+            .map(o => ({value: o.value, label: o.text}))
+        : (el.options ?? []);
+      return {
+        index: i,
+        selector: d.id ? `#${d.id}` : `ds-dropdown:nth-of-type(${i + 1})`,
+        label: d.getAttribute('label') ?? '',
+        value: el.value ?? '',
+        disabled: d.hasAttribute('disabled'),
+        options: opts,
+      };
+    });
+  },
+});

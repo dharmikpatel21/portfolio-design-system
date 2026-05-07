@@ -171,3 +171,53 @@ registerMCPTool({
     example: '<ds-card title="Project Alpha" description="A short summary." footer-text="View" footer-icon="arrow_forward"></ds-card>',
   }),
 });
+
+registerMCPTool({
+  name: 'ds_card_read',
+  title: 'Read DS Cards',
+  description: 'List all ds-card elements on the page with their title, description, image, footerText, footerIcon, and selector.',
+  annotations: {readOnlyHint: true},
+  execute: async () => {
+    const cards = Array.from(document.querySelectorAll('ds-card'));
+    return cards.map((c, i) => ({
+      index: i,
+      selector: c.id ? `#${c.id}` : `ds-card:nth-of-type(${i + 1})`,
+      title: c.getAttribute('title') ?? '',
+      description: c.getAttribute('description') ?? '',
+      image: c.getAttribute('image') ?? '',
+      footerText: c.getAttribute('footerText') ?? c.getAttribute('footer-text') ?? '',
+      footerIcon: c.getAttribute('footerIcon') ?? c.getAttribute('footer-icon') ?? '',
+    }));
+  },
+});
+
+registerMCPTool({
+  name: 'ds_card_update',
+  title: 'Update DS Card',
+  description: 'Update the title, description, image, footerText, or footerIcon of a ds-card element on the page.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      selector: {type: 'string', description: 'CSS selector targeting the ds-card. Defaults to the first one found.'},
+      title: {type: 'string', description: 'New card heading.'},
+      description: {type: 'string', description: 'New body text.'},
+      image: {type: 'string', description: 'New image URL.'},
+      footerText: {type: 'string', description: 'New footer label text.'},
+      footerIcon: {type: 'string', description: 'New footer Material Symbol icon name.'},
+    },
+  },
+  execute: async (input: Record<string, unknown>) => {
+    let target: Element | null = null;
+    if (typeof input['selector'] === 'string' && input['selector']) {
+      try { target = document.querySelector(input['selector']); } catch { /* invalid */ }
+    }
+    if (!target) target = document.querySelector('ds-card');
+    if (!target) return {success: false, error: 'No ds-card found on the page.'};
+
+    const fields = ['title', 'description', 'image', 'footerText', 'footerIcon'] as const;
+    for (const field of fields) {
+      if (typeof input[field] === 'string') (target as any)[field] = input[field];
+    }
+    return {success: true};
+  },
+});
